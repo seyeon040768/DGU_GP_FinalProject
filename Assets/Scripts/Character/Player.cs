@@ -30,7 +30,7 @@ public class Player : Character
             this.Jump();
         }
 
-        if (vertical < 0 && currentPlatform != null) // 아래로 내려가기
+        if ((Input.GetButtonDown("Vertical") && vertical < 0) && currentPlatform != null) // 아래로 내려가기
         {
             StartCoroutine(DisablePlatformCollision());
         }
@@ -40,7 +40,7 @@ public class Player : Character
 
     public override void Jump()
     {
-        RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector2.down, 2.0f, LayerMask.GetMask("Ground"));
+        RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector2.down, 2.0f, LayerMask.GetMask("Ground", "Platform"));
 
         print(rayHit.distance);
         isGrounded = rayHit.collider != null && (rayHit.distance < jumpRayDistanceThres * 1.1f && rayHit.distance > jumpRayDistanceThres * 0.9f);
@@ -50,12 +50,12 @@ public class Player : Character
             return;
         }
         Debug.Log("Player Jump");
-        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        rb.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
     }
 
     public override void Move(float horzontal)
     {
-        transform.position += new Vector3(horzontal, 0, 0) * speed * Time.deltaTime;
+        transform.position += new Vector3(horzontal, 0, 0) * (Speed * Time.deltaTime);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

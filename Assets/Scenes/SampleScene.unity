@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 279161295}
   - component: {fileID: 279161294}
   - component: {fileID: 279161293}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: platform (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -349,7 +349,7 @@ GameObject:
   - component: {fileID: 986944823}
   - component: {fileID: 986944822}
   - component: {fileID: 986944821}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: platform (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -480,7 +480,7 @@ GameObject:
   - component: {fileID: 1451876170}
   - component: {fileID: 1451876169}
   - component: {fileID: 1451876168}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: platform (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -611,7 +611,7 @@ GameObject:
   - component: {fileID: 1540677737}
   - component: {fileID: 1540677736}
   - component: {fileID: 1540677735}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -853,7 +853,7 @@ GameObject:
   - component: {fileID: 1727707529}
   - component: {fileID: 1727707528}
   - component: {fileID: 1727707527}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: platform (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1108,12 +1108,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2c6950ac03b104bab1e113706592c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 0
-  maxhp: 0
-  mp: 0
-  maxmp: 0
-  speed: 5
-  maxspeed: 0
+  hp: 100
+  mp: 100
+  speed: 7
   jumpForce: 7
-  maxJumpForce: 0
   isGrounded: 0

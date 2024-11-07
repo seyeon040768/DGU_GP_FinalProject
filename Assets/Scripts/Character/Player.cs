@@ -35,6 +35,11 @@ public class Player : Character
             StartCoroutine(DisablePlatformCollision());
         }
 
+        if (Input.GetButtonDown("Fire1"))
+        {
+            this.Attack();
+        }
+
         Debug.DrawRay(rb.position, Vector3.down, new Color(0, 1, 0));
     }
 
@@ -56,6 +61,11 @@ public class Player : Character
     public override void Move(float horzontal)
     {
         transform.position += new Vector3(horzontal, 0, 0) * (Speed * Time.deltaTime);
+    }
+
+    public override void Attack()
+    {
+        weapon.GetComponent<Weapon>().Attack();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

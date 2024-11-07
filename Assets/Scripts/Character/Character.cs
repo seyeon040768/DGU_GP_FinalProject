@@ -4,27 +4,9 @@ using UnityEngine;
 
 public abstract class Character : MonoBehaviour
 {
-    public float hp;
+    [SerializeField]
+    private float hp;
     private float maxhp;
-
-    public float mp;
-    private float maxmp;
-
-    public float speed;
-    private float maxspeed;
-
-    public float jumpForce;
-    private float maxJumpForce;
-    public bool isGrounded;
-
-    void Start()
-    {
-        maxhp = hp;
-        maxmp = mp;
-        maxspeed = speed;
-        maxJumpForce = jumpForce;
-    }
-
     public float Hp
     {
         get { return hp; }
@@ -41,6 +23,10 @@ public abstract class Character : MonoBehaviour
             }
         }
     }
+
+    [SerializeField]
+    public float mp;
+    private float maxmp;
     public float Mp
     {
         get { return mp; }
@@ -57,6 +43,10 @@ public abstract class Character : MonoBehaviour
             }
         }
     }
+
+    [SerializeField]
+    public float speed;
+    private float maxspeed;
     public float Speed
     {
         get { return speed; }
@@ -73,6 +63,10 @@ public abstract class Character : MonoBehaviour
             }
         }
     }
+
+    [SerializeField]
+    public float jumpForce;
+    private float maxJumpForce;
     public float JumpForce
     {
         get { return jumpForce; }
@@ -89,7 +83,20 @@ public abstract class Character : MonoBehaviour
             }
         }
     }
+    public bool isGrounded;
+
+    public GameObject weapon;
+
+    void Start()
+    {
+        maxhp = hp;
+        maxmp = mp;
+        maxspeed = speed;
+        maxJumpForce = jumpForce;
+    }
 
     public abstract void Jump();
     public abstract void Move(float horizontal);
+
+    public abstract void Attack();
 }

@@ -6,6 +6,8 @@ public class Player : Character
 {
     private Rigidbody2D rb;
     private Collider2D col;
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
     private PlatformEffector2D currentPlatform;
 
     private float jumpRayDistanceThres; // 바닥에 도착했음을 인정할 오브젝트 중심에서 바닥으로 향하는 ray의 최대 거리
@@ -15,6 +17,8 @@ public class Player : Character
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<CapsuleCollider2D>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         jumpRayDistanceThres = col.bounds.extents.y;
     }
@@ -23,9 +27,15 @@ public class Player : Character
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
+        RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector2.down, 2.0f, LayerMask.GetMask("Ground", "Platform"));
+        isGrounded = rayHit.collider != null && (rayHit.distance < jumpRayDistanceThres * 1.1f && rayHit.distance > jumpRayDistanceThres * 0.9f);
+        isGrounded = isGrounded && rb.velocity.y < 0.1f; // 위로 올라가는 중이면 점프 불가
+        Debug.Log(isGrounded);
+
         this.Move(horizontal);
 
-        if (Input.GetButtonDown("Jump") || (Input.GetButtonDown("Vertical") && vertical > 0)) // 점프
+        if ((Input.GetButtonDown("Jump") || (Input.GetButtonDown("Vertical") && vertical > 0)) 
+            && isGrounded) // 점프
         {
             this.Jump();
         }
@@ -40,27 +50,56 @@ public class Player : Character
             this.Attack();
         }
 
+        if (rb.velocity.y > 0 && !isGrounded)
+        {
+            Debug.Log("Jump");
+            animator.SetBool("isJump", true);
+            animator.SetBool("isFall", false);
+            animator.SetBool("isMove", false);
+        }
+        else if (rb.velocity.y < 0 && !isGrounded)
+        {
+            Debug.Log("Fall");
+            animator.SetBool("isJump", false);
+            animator.SetBool("isFall", true);
+            animator.SetBool("isMove", false);
+        }
+        else
+        {
+            animator.SetBool("isJump", false);
+            animator.SetBool("isFall", false);
+        }
+
         Debug.DrawRay(rb.position, Vector3.down, new Color(0, 1, 0));
     }
 
     public override void Jump()
     {
-        RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector2.down, 2.0f, LayerMask.GetMask("Ground", "Platform"));
-
-        print(rayHit.distance);
-        isGrounded = rayHit.collider != null && (rayHit.distance < jumpRayDistanceThres * 1.1f && rayHit.distance > jumpRayDistanceThres * 0.9f);
-        if (!this.isGrounded)
-        {
-            Debug.Log("Player Jump(ignored)");
-            return;
-        }
-        Debug.Log("Player Jump");
+        animator.SetBool("isJump", true);
+        animator.SetBool("isFall", false);
         rb.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
     }
 
-    public override void Move(float horzontal)
+    public override void Move(float horizontal)
     {
-        transform.position += new Vector3(horzontal, 0, 0) * (Speed * Time.deltaTime);
+        if (horizontal != 0)
+        {
+            if (horizontal < 0)
+            {
+                spriteRenderer.flipX = true;
+            }
+            else
+            {
+                spriteRenderer.flipX = false;
+            }
+            animator.SetBool("isMove", true);
+
+            transform.position += new Vector3(horizontal, 0, 0) * (Speed * Time.deltaTime);
+        }
+        else
+        {
+            animator.SetBool("isMove", false);
+        }
     }
 
     public override void Attack()

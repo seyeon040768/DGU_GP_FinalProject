@@ -97,6 +97,6 @@ public abstract class Character : MonoBehaviour
 
     public abstract void Jump();
     public abstract void Move(float horizontal);
-
     public abstract void Attack();
+    public abstract void TakeHit();
 }

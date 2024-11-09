@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class Player : Character
 {
+    public string[] attackAnimName;
+
     private Rigidbody2D rb;
     private Collider2D col;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private PlatformEffector2D currentPlatform;
 
+    private int[] attackAnimHash;
     private float jumpRayDistanceThres; // 바닥에 도착했음을 인정할 오브젝트 중심에서 바닥으로 향하는 ray의 최대 거리
-
 
     void Start()
     {
@@ -20,6 +22,11 @@ public class Player : Character
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
+        attackAnimHash = new int[attackAnimName.Length];
+        for (int i = 0; i < attackAnimName.Length; i++)
+        {
+            attackAnimHash[i] = Animator.StringToHash(attackAnimName[i]);
+        }
         jumpRayDistanceThres = col.bounds.extents.y;
     }
 
@@ -30,7 +37,6 @@ public class Player : Character
         RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector2.down, 2.0f, LayerMask.GetMask("Ground", "Platform"));
         isGrounded = rayHit.collider != null && (rayHit.distance < jumpRayDistanceThres * 1.1f && rayHit.distance > jumpRayDistanceThres * 0.9f);
         isGrounded = isGrounded && rb.velocity.y < 0.1f; // 위로 올라가는 중이면 점프 불가
-        Debug.Log(isGrounded);
 
         this.Move(horizontal);
 
@@ -52,14 +58,12 @@ public class Player : Character
 
         if (rb.velocity.y > 0 && !isGrounded)
         {
-            Debug.Log("Jump");
             animator.SetBool("isJump", true);
             animator.SetBool("isFall", false);
             animator.SetBool("isMove", false);
         }
         else if (rb.velocity.y < 0 && !isGrounded)
         {
-            Debug.Log("Fall");
             animator.SetBool("isJump", false);
             animator.SetBool("isFall", true);
             animator.SetBool("isMove", false);
@@ -86,11 +90,11 @@ public class Player : Character
         {
             if (horizontal < 0)
             {
-                spriteRenderer.flipX = true;
+                transform.localScale = new Vector3(-2.0f, 2.0f, 2.0f);
             }
             else
             {
-                spriteRenderer.flipX = false;
+                transform.localScale = new Vector3(2.0f, 2.0f, 2.0f);
             }
             animator.SetBool("isMove", true);
 
@@ -104,7 +108,14 @@ public class Player : Character
 
     public override void Attack()
     {
+        int attackNum = Random.Range(0, attackAnimHash.Length);
+        animator.SetTrigger(attackAnimHash[attackNum]);
         weapon.GetComponent<Weapon>().Attack();
+    }
+
+    public override void TakeHit()
+    {
+        throw new System.NotImplementedException();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

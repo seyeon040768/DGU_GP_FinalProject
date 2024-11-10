@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 201486388}
   - component: {fileID: 201486387}
   m_Layer: 5
-  m_Name: quit
+  m_Name: Quit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

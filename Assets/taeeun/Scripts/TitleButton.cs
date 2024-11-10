@@ -33,6 +33,11 @@ public class TitleButton : MonoBehaviour
     {
         Application.Quit();
     }
+    public void SceneChangeDelay()
+    {
+        Invoke("ChangeScene", 0.3f);
+    }
+
     public void ChangeScene()
     {
         SceneManager.LoadScene("SampleScene");

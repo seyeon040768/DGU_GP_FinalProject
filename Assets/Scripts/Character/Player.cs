@@ -12,9 +12,10 @@ public class Player : Character
     private SpriteRenderer spriteRenderer;
     private PlatformEffector2D currentPlatform;
 
+    public GameManager manager; // 대화창 띄우기 용
     private int[] attackAnimHash;
     private float jumpRayDistanceThres; // 바닥에 도착했음을 인정할 오브젝트 중심에서 바닥으로 향하는 ray의 최대 거리
-
+    GameObject scanObject;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -75,6 +76,10 @@ public class Player : Character
         }
 
         Debug.DrawRay(rb.position, Vector3.down, new Color(0, 1, 0));
+
+        if(Input.GetKeyDown(KeyCode.Return) && scanObject != null) { 
+            manager.Action(scanObject);
+        }
     }
 
     public override void Jump()

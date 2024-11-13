@@ -40,6 +40,6 @@ public class TitleButton : MonoBehaviour
 
     public void ChangeScene()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("Tutorial");
     }
 }

@@ -16,6 +16,7 @@ public class DialogManager : MonoBehaviour
     void GenerateData()
     {
         talkData.Add(1000, new string[] { "대사테스트", "123" });
+        talkData.Add(200, new string[] { "안녕하세요" });
     }
 
     public string GetTalk(int id, int talkIndex)

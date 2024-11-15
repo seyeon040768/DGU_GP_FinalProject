@@ -8,46 +8,36 @@ public class GameManager : MonoBehaviour
     public GameObject dialogPanel;
     public Text dialogText;
     public GameObject scanObject;
-    public bool isAction;
+    public bool isAction = false;
     public int talkIndex;
 
     public void Action(GameObject scanObj)
     {
-        if (isAction)
-        {
-            isAction = false;
-        }
-        else
-        {
-            isAction = true;
-            scanObject = scanObj;
-            ObjectData objectData = scanObject.GetComponent<ObjectData>();
-            Talk(objectData.id, objectData.isNpc);
-        }
+        scanObject = scanObj;
+        ObjectData objectData = scanObject.GetComponent<ObjectData>();
+        Talk(objectData.id, objectData.isNpc);
         dialogPanel.SetActive(isAction);
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     void Talk(int id, bool isNpc)
     {
         string dialogData = dialogManager.GetTalk(id, talkIndex);
+
+        if(dialogData == null)
+        {
+            isAction = false;
+            talkIndex = 0;
+            return;
+        }
         if (isNpc)
         {
             dialogText.text = dialogData;
         }
-        else
-        {
+        else {
             dialogText.text = dialogData;
         }
+        isAction = true;
+        talkIndex++;
     }
 }

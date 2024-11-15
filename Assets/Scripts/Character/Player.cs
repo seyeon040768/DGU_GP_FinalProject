@@ -31,6 +31,25 @@ public class Player : Character
         jumpRayDistanceThres = col.bounds.extents.y;
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // ObjectData가 있는지 확인하여 scanObject에 저장
+        if (collision.GetComponent<ObjectData>() != null)
+        {
+            scanObject = collision.gameObject;
+            Debug.Log("NPC 감지됨: " + scanObject.name);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        // Trigger에서 벗어나면 scanObject를 초기화
+        if (collision.gameObject == scanObject)
+        {
+            scanObject = null;
+            Debug.Log("NPC 범위에서 벗어남");
+        }
+    }
     void Update()
     {
         float horizontal = Input.GetAxis("Horizontal");
@@ -75,11 +94,15 @@ public class Player : Character
             animator.SetBool("isFall", false);
         }
 
-        Debug.DrawRay(rb.position, Vector3.down, new Color(0, 1, 0));
-
-        if(Input.GetKeyDown(KeyCode.Return) && scanObject != null) { 
+        if (Input.GetKeyDown(KeyCode.Return) && scanObject != null)
+        {
+            Debug.Log("NPC와 상호작용 시도");
             manager.Action(scanObject);
         }
+
+
+        Debug.DrawRay(rb.position, Vector3.down, new Color(0, 1, 0));
+
     }
 
     public override void Jump()
@@ -146,4 +169,6 @@ public class Player : Character
         yield return new WaitForSeconds(1.0f);
         Physics2D.IgnoreCollision(GetComponent<Collider2D>(), platformCollider, false);
     }
+
+
 }

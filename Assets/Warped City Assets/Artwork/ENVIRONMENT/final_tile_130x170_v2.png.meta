@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e518eff84979a1b449fa2d3f363d0d18
+guid: c97f4b29eb8bf964e8f3d4e0d912117c
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -42,7 +42,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -91,70 +91,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: stage4 tileset_0
-      rect:
-        serializedVersion: 2
-        x: 2
-        y: 71
-        width: 100
-        height: 56
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 7}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 86cf777fb818ac647a2585ad3b3ea810
-      internalID: -1427856781
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: stage4 tileset_3
-      rect:
-        serializedVersion: 2
-        x: 355
-        y: 15
-        width: 100
-        height: 100
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 70ce739154ffac0489eb7750db5f23ea
-      internalID: -696599365
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: stage4 tileset_5
-      rect:
-        serializedVersion: 2
-        x: 178
-        y: 0
-        width: 100
-        height: 61
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e75352ee0fa6dc543bc4cecad4b0a8cc
-      internalID: 843871364
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
@@ -165,13 +102,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      stage4 tileset_0: -1427856781
-      stage4 tileset_1: 590512877
-      stage4 tileset_2: 1853810700
-      stage4 tileset_3: -696599365
-      stage4 tileset_4: 1322480341
-      stage4 tileset_5: 843871364
+    nameFileIdTable: {}
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

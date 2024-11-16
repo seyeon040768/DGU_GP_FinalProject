@@ -16,6 +16,7 @@ public class Player : Character
     private int[] attackAnimHash;
     private float jumpRayDistanceThres; // 바닥에 도착했음을 인정할 오브젝트 중심에서 바닥으로 향하는 ray의 최대 거리
     GameObject scanObject;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -37,7 +38,6 @@ public class Player : Character
         if (collision.GetComponent<ObjectData>() != null)
         {
             scanObject = collision.gameObject;
-            Debug.Log("NPC 감지됨: " + scanObject.name);
         }
     }
 
@@ -47,17 +47,16 @@ public class Player : Character
         if (collision.gameObject == scanObject)
         {
             scanObject = null;
-            Debug.Log("NPC 범위에서 벗어남");
         }
     }
     void Update()
     {
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector2.down, 2.0f, LayerMask.GetMask("Ground", "Platform"));
         isGrounded = rayHit.collider != null && (rayHit.distance < jumpRayDistanceThres * 1.1f && rayHit.distance > jumpRayDistanceThres * 0.9f);
         isGrounded = isGrounded && rb.velocity.y < 0.1f; // 위로 올라가는 중이면 점프 불가
-
         this.Move(horizontal);
 
         if ((Input.GetButtonDown("Jump") || (Input.GetButtonDown("Vertical") && vertical > 0)) 
@@ -96,7 +95,6 @@ public class Player : Character
 
         if (Input.GetKeyDown(KeyCode.Return) && scanObject != null)
         {
-            Debug.Log("NPC와 상호작용 시도");
             manager.Action(scanObject);
         }
 

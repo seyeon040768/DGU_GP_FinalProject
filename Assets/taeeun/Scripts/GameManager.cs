@@ -10,7 +10,10 @@ public class GameManager : MonoBehaviour
     public GameObject scanObject;
     public bool isAction = false;
     public int talkIndex;
+    private Coroutine dialogCoroutine;
 
+    public AudioSource audioSource;
+    public AudioClip typingSound;
     public void Action(GameObject scanObj)
     {
         scanObject = scanObj;
@@ -30,14 +33,31 @@ public class GameManager : MonoBehaviour
             talkIndex = 0;
             return;
         }
-        if (isNpc)
+
+        if(dialogCoroutine != null)
         {
-            dialogText.text = dialogData;
+            StopCoroutine(dialogCoroutine);
         }
-        else {
-            dialogText.text = dialogData;
-        }
+        dialogCoroutine = StartCoroutine(TypeDialog(dialogData));
         isAction = true;
         talkIndex++;
     }
+    IEnumerator TypeDialog(string dialog)
+    {
+        dialogText.text = ""; // 초기화
+        foreach (char letter in dialog.ToCharArray())
+        {
+            dialogText.text += letter; // 한 글자씩 추가
+            if (typingSound != null && audioSource != null) // 효과음 재생
+            {
+                audioSource.PlayOneShot(typingSound);
+            }
+
+
+            yield return new WaitForSeconds(0.1f); // 0.1초에 한글자씩
+        }
+        isAction = false; // 대사 출력 완료
+    }
+
+
 }

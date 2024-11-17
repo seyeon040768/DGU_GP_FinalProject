@@ -4,6 +4,29 @@ using UnityEngine;
 
 public class Player : Character
 {
+    public float dashDistance;
+    public float dashRecoveryDuration;
+    private float dashRecoveryCool;
+
+    public int maxstamina;
+    private int stamina;
+    public int Stamina
+    {
+        get { return stamina; }
+        set
+        {
+            this.stamina = value;
+            if (this.stamina < 0)
+            {
+                this.stamina = 0;
+            }
+            else if (this.stamina > maxstamina)
+            {
+                this.stamina = maxstamina;
+            }
+        }
+    }
+
     public string[] attackAnimName;
 
     private Rigidbody2D rb;
@@ -17,8 +40,11 @@ public class Player : Character
     private float jumpRayDistanceThres; // 바닥에 도착했음을 인정할 오브젝트 중심에서 바닥으로 향하는 ray의 최대 거리
     GameObject scanObject;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+        Stamina = maxstamina;
+
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<CapsuleCollider2D>();
         animator = GetComponent<Animator>();
@@ -32,31 +58,35 @@ public class Player : Character
         jumpRayDistanceThres = col.bounds.extents.y;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        // ObjectData가 있는지 확인하여 scanObject에 저장
-        if (collision.GetComponent<ObjectData>() != null)
-        {
-            scanObject = collision.gameObject;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        // Trigger에서 벗어나면 scanObject를 초기화
-        if (collision.gameObject == scanObject)
-        {
-            scanObject = null;
-        }
-    }
     void Update()
     {
+        Debug.Log(Stamina);
+        ManageCoolTime();
 
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector2.down, 2.0f, LayerMask.GetMask("Ground", "Platform"));
         isGrounded = rayHit.collider != null && (rayHit.distance < jumpRayDistanceThres * 1.1f && rayHit.distance > jumpRayDistanceThres * 0.9f);
         isGrounded = isGrounded && rb.velocity.y < 0.1f; // 위로 올라가는 중이면 점프 불가
+
+        if (isAttacking)
+        {
+            animator.SetBool("isMove", false);
+            return;
+        }
+
+        if (isGrounded && Input.GetButtonDown("Fire1")) // 점프 중일 때는 공격 불가
+        {
+            this.Attack();
+            return; // 공격 버튼 클릭 시 이동 중지
+        }
+
+        if (isGrounded && stamina > 0 && Input.GetMouseButtonDown(1))
+        {
+            this.Dash();
+            return;
+        }
+
         this.Move(horizontal);
 
         if ((Input.GetButtonDown("Jump") || (Input.GetButtonDown("Vertical") && vertical > 0)) 
@@ -68,11 +98,6 @@ public class Player : Character
         if ((Input.GetButtonDown("Vertical") && vertical < 0) && currentPlatform != null) // 아래로 내려가기
         {
             StartCoroutine(DisablePlatformCollision());
-        }
-
-        if (Input.GetButtonDown("Fire1"))
-        {
-            this.Attack();
         }
 
         if (rb.velocity.y > 0 && !isGrounded)
@@ -100,7 +125,16 @@ public class Player : Character
 
 
         Debug.DrawRay(rb.position, Vector3.down, new Color(0, 1, 0));
+    }
 
+    private void ManageCoolTime()
+    {
+        dashRecoveryCool -= Time.deltaTime;
+        if (dashRecoveryCool < 0)
+        {
+            dashRecoveryCool = dashRecoveryDuration;
+            ++Stamina;
+        }
     }
 
     public override void Jump()
@@ -132,16 +166,51 @@ public class Player : Character
         }
     }
 
+    public void Dash()
+    {
+        --Stamina;
+        float way = transform.localScale.x / Mathf.Abs(transform.localScale.x);
+        transform.position += new Vector3(dashDistance * way, 0.0f, 0.0f);
+    }
+
     public override void Attack()
     {
+        isAttacking = true;
+
         int attackNum = Random.Range(0, attackAnimHash.Length);
         animator.SetTrigger(attackAnimHash[attackNum]);
         weapon.GetComponent<Weapon>().Attack();
+
+        float attackAnimDuration = GetAnimationClipLength(attackAnimName[attackNum]);
+        Invoke(nameof(EndAttack), attackAnimDuration);
+    }
+
+    private void EndAttack()
+    {
+        isAttacking = false; // 공격 상태 해제
     }
 
     public override void TakeHit()
     {
         throw new System.NotImplementedException();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // ObjectData가 있는지 확인하여 scanObject에 저장
+        if (collision.GetComponent<ObjectData>() != null)
+        {
+            scanObject = collision.gameObject;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        // Trigger에서 벗어나면 scanObject를 초기화
+        if (collision.gameObject == scanObject)
+        {
+            scanObject = null;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -169,4 +238,17 @@ public class Player : Character
     }
 
 
+    // utils
+    float GetAnimationClipLength(string clipName)
+    {
+        AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
+        foreach (AnimationClip clip in clips)
+        {
+            if (clip.name == clipName)
+            {
+                return clip.length; // 애니메이션 클립의 길이를 반환
+            }
+        }
+        return 0f;
+    }
 }

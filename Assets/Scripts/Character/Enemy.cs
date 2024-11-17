@@ -5,12 +5,15 @@ using UnityEngine;
 public class Enemy : Character
 {
     private Animator animator;
+
+    protected override void Start()
+    {
+        base.Start();
+    }
     private void Update()
     {
          animator = GetComponent<Animator>();
     }
-
-    
 
     public override void Jump()
     {

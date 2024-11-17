@@ -704,11 +704,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d8cce023c96fff41ba7b2ed37877727, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 100
-  mp: 100
-  speed: 0
-  jumpForce: 0
+  maxhp: 0
+  maxmp: 0
+  maxspeed: 0
+  maxJumpForce: 0
   isGrounded: 0
+  isAttacking: 0
   weapon: {fileID: 0}
 --- !u!212 &1502699583
 SpriteRenderer:
@@ -1325,15 +1326,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2c6950ac03b104bab1e113706592c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 100
-  mp: 100
-  speed: 7
-  jumpForce: 7
+  maxhp: 100
+  maxmp: 100
+  maxspeed: 7
+  maxJumpForce: 7
   isGrounded: 0
+  isAttacking: 0
   weapon: {fileID: 404287553}
+  dashDistance: 2
+  dashRecoveryDuration: 1
+  maxstamina: 2
   attackAnimName:
   - Attack1
   - Attack2
+  manager: {fileID: 0}
 --- !u!95 &2065684638
 Animator:
   serializedVersion: 5

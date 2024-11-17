@@ -4,9 +4,8 @@ using UnityEngine;
 
 public abstract class Character : MonoBehaviour
 {
-    [SerializeField]
+    public float maxhp;
     private float hp;
-    private float maxhp;
     public float Hp
     {
         get { return hp; }
@@ -24,9 +23,8 @@ public abstract class Character : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    public float mp;
-    private float maxmp;
+    public float maxmp;
+    private float mp;
     public float Mp
     {
         get { return mp; }
@@ -44,9 +42,8 @@ public abstract class Character : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    public float speed;
-    private float maxspeed;
+    public float maxspeed;
+    private float speed;
     public float Speed
     {
         get { return speed; }
@@ -64,9 +61,8 @@ public abstract class Character : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    public float jumpForce;
-    private float maxJumpForce;
+    public float maxJumpForce;
+    private float jumpForce;
     public float JumpForce
     {
         get { return jumpForce; }
@@ -85,14 +81,18 @@ public abstract class Character : MonoBehaviour
     }
     public bool isGrounded;
 
+    public bool isAttacking;
+
     public GameObject weapon;
 
-    void Start()
+    protected virtual void Start()
     {
-        maxhp = hp;
-        maxmp = mp;
-        maxspeed = speed;
-        maxJumpForce = jumpForce;
+        Hp = maxhp;
+        Mp = maxmp;
+        Speed = maxspeed;
+        JumpForce = maxJumpForce;
+
+        isAttacking = false;
     }
 
     public abstract void Jump();

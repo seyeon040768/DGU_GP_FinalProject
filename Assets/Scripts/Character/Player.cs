@@ -60,8 +60,8 @@ public class Player : Character
 
     void Update()
     {
-        Debug.Log(Stamina);
         ManageCoolTime();
+        ManageAnimation();
 
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
@@ -71,7 +71,6 @@ public class Player : Character
 
         if (isAttacking)
         {
-            animator.SetBool("isMove", false);
             return;
         }
 
@@ -100,24 +99,6 @@ public class Player : Character
             StartCoroutine(DisablePlatformCollision());
         }
 
-        if (rb.velocity.y > 0 && !isGrounded)
-        {
-            animator.SetBool("isJump", true);
-            animator.SetBool("isFall", false);
-            animator.SetBool("isMove", false);
-        }
-        else if (rb.velocity.y < 0 && !isGrounded)
-        {
-            animator.SetBool("isJump", false);
-            animator.SetBool("isFall", true);
-            animator.SetBool("isMove", false);
-        }
-        else
-        {
-            animator.SetBool("isJump", false);
-            animator.SetBool("isFall", false);
-        }
-
         if (Input.GetKeyDown(KeyCode.Return) && scanObject != null)
         {
             manager.Action(scanObject);
@@ -137,6 +118,34 @@ public class Player : Character
         }
     }
 
+    private void ManageAnimation()
+    {
+        if (isAttacking)
+        {
+            animator.SetBool("isMove", false);
+            return;
+        }
+
+        if (rb.velocity.y > 0 && !isGrounded) // 점프해서 위로 올라가는 상태
+        {
+            animator.SetBool("isJump", true);
+            animator.SetBool("isFall", false);
+            animator.SetBool("isMove", false);
+        }
+        else if (rb.velocity.y < 0 && !isGrounded) // 아래로 떨어지는 상태
+        {
+            animator.SetBool("isJump", false);
+            animator.SetBool("isFall", true);
+            animator.SetBool("isMove", false);
+        }
+        else
+        {
+            animator.SetBool("isJump", false);
+            animator.SetBool("isFall", false);
+            animator.SetBool("isMove", isMoving);
+        }
+    }
+
     public override void Jump()
     {
         animator.SetBool("isJump", true);
@@ -148,6 +157,7 @@ public class Player : Character
     {
         if (horizontal != 0)
         {
+            isMoving = true;
             if (horizontal < 0)
             {
                 transform.localScale = new Vector3(-2.0f, 2.0f, 2.0f);
@@ -156,13 +166,12 @@ public class Player : Character
             {
                 transform.localScale = new Vector3(2.0f, 2.0f, 2.0f);
             }
-            animator.SetBool("isMove", true);
 
             transform.position += new Vector3(horizontal, 0, 0) * (Speed * Time.deltaTime);
         }
         else
         {
-            animator.SetBool("isMove", false);
+            isMoving = false;
         }
     }
 

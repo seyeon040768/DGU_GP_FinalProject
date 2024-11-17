@@ -81,6 +81,7 @@ public abstract class Character : MonoBehaviour
     }
     public bool isGrounded;
 
+    public bool isMoving;
     public bool isAttacking;
 
     public GameObject weapon;

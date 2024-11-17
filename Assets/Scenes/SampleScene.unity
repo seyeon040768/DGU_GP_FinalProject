@@ -709,6 +709,7 @@ MonoBehaviour:
   maxspeed: 0
   maxJumpForce: 0
   isGrounded: 0
+  isMoving: 0
   isAttacking: 0
   weapon: {fileID: 0}
 --- !u!212 &1502699583
@@ -1331,6 +1332,7 @@ MonoBehaviour:
   maxspeed: 7
   maxJumpForce: 7
   isGrounded: 0
+  isMoving: 0
   isAttacking: 0
   weapon: {fileID: 404287553}
   dashDistance: 2

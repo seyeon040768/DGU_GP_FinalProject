@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : Character
 {
+    private int facingWay; // 왼쪽(-) 오른쪽(+)
+
     public float dashDistance;
     public float dashRecoveryDuration;
     private float dashRecoveryCool;
@@ -45,6 +47,8 @@ public class Player : Character
         base.Start();
         Stamina = maxstamina;
 
+        facingWay = (int)(transform.localScale.x / Mathf.Abs(transform.localScale.x));
+
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<CapsuleCollider2D>();
         animator = GetComponent<Animator>();
@@ -62,6 +66,7 @@ public class Player : Character
     {
         ManageCoolTime();
         ManageAnimation();
+        RotateWeapon();
 
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
@@ -160,13 +165,14 @@ public class Player : Character
             isMoving = true;
             if (horizontal < 0)
             {
-                transform.localScale = new Vector3(-2.0f, 2.0f, 2.0f);
+                facingWay = -1;
             }
             else
             {
-                transform.localScale = new Vector3(2.0f, 2.0f, 2.0f);
+                facingWay = 1;
             }
 
+            transform.localScale = new Vector3(2.0f * facingWay, 2.0f, 2.0f);
             transform.position += new Vector3(horizontal, 0, 0) * (Speed * Time.deltaTime);
         }
         else
@@ -178,8 +184,7 @@ public class Player : Character
     public void Dash()
     {
         --Stamina;
-        float way = transform.localScale.x / Mathf.Abs(transform.localScale.x);
-        transform.position += new Vector3(dashDistance * way, 0.0f, 0.0f);
+        transform.position += new Vector3(dashDistance * facingWay, 0.0f, 0.0f);
     }
 
     public override void Attack()
@@ -193,10 +198,24 @@ public class Player : Character
         float attackAnimDuration = GetAnimationClipLength(attackAnimName[attackNum]);
         Invoke(nameof(EndAttack), attackAnimDuration);
     }
-
     private void EndAttack()
     {
         isAttacking = false; // 공격 상태 해제
+    }
+
+    private void RotateWeapon()
+    {
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 playerToMouse = mousePos - new Vector2(transform.position.x, transform.position.y);
+        float theta = Mathf.Atan2(playerToMouse.y, playerToMouse.x) * Mathf.Rad2Deg;
+        if (facingWay > 0)
+        {
+            weapon.transform.rotation = Quaternion.AngleAxis(theta, Vector3.forward);
+        }
+        else
+        {
+            weapon.transform.rotation = Quaternion.AngleAxis(theta - 180.0f, Vector3.forward);
+        }
     }
 
     public override void TakeHit()

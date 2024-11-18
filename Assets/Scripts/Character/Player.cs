@@ -93,7 +93,7 @@ public class Player : Character
 
         this.Move(horizontal);
 
-        if ((Input.GetButtonDown("Jump") || (Input.GetButtonDown("Vertical") && vertical > 0)) 
+        if ((Input.GetButtonDown("Jump") || (Input.GetButtonDown("Vertical") && vertical > 0))
             && isGrounded) // มกวม
         {
             this.Jump();
@@ -280,3 +280,4 @@ public class Player : Character
         return 0f;
     }
 }
+

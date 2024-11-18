@@ -9,6 +9,8 @@ public class HUD : MonoBehaviour
 
     Text myText;
     Slider mySlider;
+    public Character character;
+
     
     void Awake() // √ ±‚»≠
     {
@@ -21,6 +23,9 @@ public class HUD : MonoBehaviour
         switch (type)
         {
             case InfoType.HP:
+                float curHP = character.Hp;
+                float maxHP = character.maxhp;
+                mySlider.value = curHP / maxHP;
 
                 break;
             case InfoType.Dash:

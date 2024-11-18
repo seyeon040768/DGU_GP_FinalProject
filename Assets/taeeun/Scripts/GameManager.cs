@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
 
     public AudioSource audioSource;
     public AudioClip typingSound;
+
     public void Action(GameObject scanObj)
     {
         scanObject = scanObj;

@@ -76,8 +76,12 @@ public class EnemyAI : MonoBehaviour
 
     void ChasePlayer()
     {
-        Vector2 direction = (player.position - transform.position).normalized;
+        Vector2 targetPosition = new Vector2(player.position.x, transform.position.y);
+        Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
+
+        // ¿Ãµø
         transform.position += (Vector3)direction * chaseSpeed * Time.deltaTime;
+
     }
 
     void Patrol()

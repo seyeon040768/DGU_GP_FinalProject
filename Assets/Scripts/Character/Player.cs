@@ -79,7 +79,7 @@ public class Player : Character
             return;
         }
 
-        if (isGrounded && Input.GetButtonDown("Fire1")) // 점프 중일 때는 공격 불가
+        if (isGrounded && Input.GetButton("Fire1") && attackCool <= 0.0f) // 점프 중일 때는 공격 불가
         {
             this.Attack();
             return; // 공격 버튼 클릭 시 이동 중지
@@ -120,6 +120,12 @@ public class Player : Character
         {
             dashRecoveryCool = dashRecoveryDuration;
             ++Stamina;
+        }
+
+        attackCool -= Time.deltaTime;
+        if (attackCool < 0)
+        {
+            attackCool = 0.0f;
         }
     }
 
@@ -190,6 +196,7 @@ public class Player : Character
     public override void Attack()
     {
         isAttacking = true;
+        attackCool = attackDuration;
 
         int attackNum = Random.Range(0, attackAnimHash.Length);
         animator.SetTrigger(attackAnimHash[attackNum]);
@@ -206,16 +213,13 @@ public class Player : Character
     private void RotateWeapon()
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 playerToMouse = mousePos - new Vector2(transform.position.x, transform.position.y);
-        float theta = Mathf.Atan2(playerToMouse.y, playerToMouse.x) * Mathf.Rad2Deg;
-        if (facingWay > 0)
-        {
-            weapon.transform.rotation = Quaternion.AngleAxis(theta, Vector3.forward);
-        }
-        else
-        {
-            weapon.transform.rotation = Quaternion.AngleAxis(theta - 180.0f, Vector3.forward);
-        }
+        Vector2 weaponToMouse = mousePos - new Vector2(weapon.transform.position.x, weapon.transform.position.y);
+
+        float theta = Mathf.Atan2(weaponToMouse.y, weaponToMouse.x) * Mathf.Rad2Deg;
+
+        weapon.transform.rotation = Quaternion.AngleAxis(theta, Vector3.forward);
+
+        Debug.DrawRay(weapon.transform.position, weaponToMouse, Color.yellow);
     }
 
     public override void TakeHit()

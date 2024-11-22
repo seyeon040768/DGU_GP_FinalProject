@@ -85,6 +85,8 @@ public abstract class Character : MonoBehaviour
     public bool isAttacking;
 
     public GameObject weapon;
+    public float attackDuration;
+    public float attackCool;
 
     protected virtual void Start()
     {
@@ -93,6 +95,7 @@ public abstract class Character : MonoBehaviour
         Speed = maxspeed;
         JumpForce = maxJumpForce;
 
+        attackCool = 0.0f;
         isAttacking = false;
     }
 

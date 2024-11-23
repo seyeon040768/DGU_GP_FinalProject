@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class Character : MonoBehaviour
 {
+    public bool isInvincible;
+
     public float maxhp;
     private float hp;
     public float Hp
@@ -11,6 +13,11 @@ public abstract class Character : MonoBehaviour
         get { return hp; }
         set
         {
+            if (isInvincible && value < this.hp)
+            { // 무적 상태인 경우 체력 감소 방지
+                return;
+            }
+
             this.hp = value;
             if (this.hp < 0)
             {
@@ -90,6 +97,8 @@ public abstract class Character : MonoBehaviour
 
     protected virtual void Start()
     {
+        isInvincible = false;
+
         Hp = maxhp;
         Mp = maxmp;
         Speed = maxspeed;

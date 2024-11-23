@@ -29,6 +29,10 @@ public class Player : Character
         }
     }
 
+    public int combo;
+    public float comboDuration;
+    private float comboCool;
+
     public string[] attackAnimName;
 
     private Rigidbody2D rb;
@@ -49,6 +53,8 @@ public class Player : Character
 
         facingWay = (int)(transform.localScale.x / Mathf.Abs(transform.localScale.x));
 
+        combo = 0;
+
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<CapsuleCollider2D>();
         animator = GetComponent<Animator>();
@@ -64,45 +70,65 @@ public class Player : Character
 
     void Update()
     {
-        ManageCoolTime();
-        ManageAnimation();
-        RotateWeapon();
+        // 필수 실행 코드 /////
 
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector2.down, 2.0f, LayerMask.GetMask("Ground", "Platform"));
+
+        isMoving = (horizontal != 0);
         isGrounded = rayHit.collider != null && (rayHit.distance < jumpRayDistanceThres * 1.1f && rayHit.distance > jumpRayDistanceThres * 0.9f);
         isGrounded = isGrounded && rb.velocity.y < 0.1f; // 위로 올라가는 중이면 점프 불가
+        // isAttacking은 Attack()과 EndAttack()을 이용해 공격 애니메이션 속도에 따라 동적으로 변경
+
+        ManageCoolTime(); // 쿨타임 관리
+
+        //////////////////////
 
         if (isAttacking)
         {
-            return;
-        }
 
-        if (isGrounded && Input.GetButton("Fire1") && attackCool <= 0.0f) // 점프 중일 때는 공격 불가
+        }
+        else if (isGrounded && Input.GetButton("Fire1") && attackCool <= 0.0f) // 점프 중일 때는 공격 불가
         {
+            isMoving = false;
             this.Attack();
-            return; // 공격 버튼 클릭 시 이동 중지
         }
-
-        if (isGrounded && stamina > 0 && Input.GetMouseButtonDown(1))
+        else
         {
-            this.Dash();
-            return;
+            if (stamina > 0 && Input.GetMouseButtonDown(1))
+            {
+                this.Dash();
+            }
+
+            if (isMoving)
+            {
+                this.Move(horizontal);
+            }
+
+            if ((Input.GetButtonDown("Jump") || (Input.GetButtonDown("Vertical") && vertical > 0))
+                && isGrounded) // 점프
+            {
+                this.Jump();
+            }
+
+            if ((Input.GetButtonDown("Vertical") && vertical < 0) && currentPlatform != null) // 아래로 내려가기
+            {
+                StartCoroutine(DisablePlatformCollision());
+            }
         }
 
-        this.Move(horizontal);
+        // 출력 관련 함수 /////
 
-        if ((Input.GetButtonDown("Jump") || (Input.GetButtonDown("Vertical") && vertical > 0))
-            && isGrounded) // 점프
-        {
-            this.Jump();
+        RotateWeaponToMouse(); // 무기 마우스 방향으로 회전
+        if (!isMoving && isGrounded)
+        { // 정지 상태이고 땅에 있을 경우에만 마우스 방향으로 회전
+            RotatePlayerToMouse();
         }
+        ManageAnimation(); // 애니메이션 관리
 
-        if ((Input.GetButtonDown("Vertical") && vertical < 0) && currentPlatform != null) // 아래로 내려가기
-        {
-            StartCoroutine(DisablePlatformCollision());
-        }
+        ////////////////////////
+
 
         if (Input.GetKeyDown(KeyCode.Return) && scanObject != null)
         {
@@ -126,6 +152,13 @@ public class Player : Character
         if (attackCool < 0)
         {
             attackCool = 0.0f;
+        }
+
+        comboCool += Time.deltaTime;
+        if (comboCool > comboDuration)
+        { // 콤보를 넣은지 일정 시간이 지나면 콤보 초기화
+            combo = 0;
+            comboCool = 0.0f;
         }
     }
 
@@ -166,25 +199,17 @@ public class Player : Character
 
     public override void Move(float horizontal)
     {
-        if (horizontal != 0)
+        if (horizontal < 0)
         {
-            isMoving = true;
-            if (horizontal < 0)
-            {
-                facingWay = -1;
-            }
-            else
-            {
-                facingWay = 1;
-            }
-
-            transform.localScale = new Vector3(2.0f * facingWay, 2.0f, 2.0f);
-            transform.position += new Vector3(horizontal, 0, 0) * (Speed * Time.deltaTime);
+            facingWay = -1;
         }
         else
         {
-            isMoving = false;
+            facingWay = 1;
         }
+
+        transform.localScale = new Vector3(2.0f * facingWay, 2.0f, 2.0f);
+        transform.position += new Vector3(horizontal, 0, 0) * (Speed * Time.deltaTime);
     }
 
     public void Dash()
@@ -210,15 +235,36 @@ public class Player : Character
         isAttacking = false; // 공격 상태 해제
     }
 
-    private void RotateWeapon()
+    private void UltimateAttack()
     {
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 weaponToMouse = mousePos - new Vector2(weapon.transform.position.x, weapon.transform.position.y);
 
-        float theta = Mathf.Atan2(weaponToMouse.y, weaponToMouse.x) * Mathf.Rad2Deg;
+    }
+
+    private void RotatePlayerToMouse()
+    {
+        float theta = GetAngleToMouse(transform.position);
+
+        if (Mathf.Abs(theta) < 90.0f)
+        { // 오른쪽
+            facingWay = 1;
+        }
+        else
+        { // 왼쪽
+            facingWay = -1;
+        }
+
+        transform.localScale = new Vector3(2.0f * facingWay, 2.0f, 2.0f);
+    }
+
+    private void RotateWeaponToMouse()
+    {
+        float theta = GetAngleToMouse(weapon.transform.position);
 
         weapon.transform.rotation = Quaternion.AngleAxis(theta, Vector3.forward);
 
+
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 weaponToMouse = mousePos - new Vector2(weapon.transform.position.x, weapon.transform.position.y);
         Debug.DrawRay(weapon.transform.position, weaponToMouse, Color.yellow);
     }
 
@@ -282,6 +328,16 @@ public class Player : Character
             }
         }
         return 0f;
+    }
+
+    float GetAngleToMouse(Vector3 position)
+    {
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 ToMouse = mousePos - new Vector2(position.x, position.y);
+
+        float theta = Mathf.Atan2(ToMouse.y, ToMouse.x) * Mathf.Rad2Deg;
+
+        return theta;
     }
 }
 

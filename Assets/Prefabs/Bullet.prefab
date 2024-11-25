@@ -101,7 +101,7 @@ MonoBehaviour:
   owner: {fileID: 0}
   damage: 5
   speed: 10
-  duration: 1000
+  duration: 3
 --- !u!58 &4351167878125535541
 CircleCollider2D:
   m_ObjectHideFlags: 0

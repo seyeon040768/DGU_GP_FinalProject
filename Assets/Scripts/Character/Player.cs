@@ -258,8 +258,13 @@ public class Player : Character
 
     private void RotateWeaponToMouse()
     {
+ 
         float theta = GetAngleToMouse(weapon.transform.position);
 
+        if(facingWay == -1)
+        {
+            theta -= 180;
+        }
         weapon.transform.rotation = Quaternion.AngleAxis(theta, Vector3.forward);
 
 

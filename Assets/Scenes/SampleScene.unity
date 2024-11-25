@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 279161295}
   - component: {fileID: 279161294}
   - component: {fileID: 279161293}
+  - component: {fileID: 279161297}
   m_Layer: 7
   m_Name: platform (4)
   m_TagString: Untagged
@@ -253,6 +254,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &279161297
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279161292}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &404287553
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,6 +491,7 @@ GameObject:
   - component: {fileID: 986944823}
   - component: {fileID: 986944822}
   - component: {fileID: 986944821}
+  - component: {fileID: 986944825}
   m_Layer: 7
   m_Name: platform (1)
   m_TagString: Untagged
@@ -588,6 +611,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &986944825
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 986944820}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1451876167
 GameObject:
   m_ObjectHideFlags: 0
@@ -600,6 +644,7 @@ GameObject:
   - component: {fileID: 1451876170}
   - component: {fileID: 1451876169}
   - component: {fileID: 1451876168}
+  - component: {fileID: 1451876172}
   m_Layer: 7
   m_Name: platform (2)
   m_TagString: Untagged
@@ -719,6 +764,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &1451876172
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451876167}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1502699581
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,6 +818,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d8cce023c96fff41ba7b2ed37877727, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isInvincible: 0
   maxhp: 100
   maxmp: 100
   maxspeed: 0
@@ -899,6 +966,7 @@ GameObject:
   - component: {fileID: 1540677737}
   - component: {fileID: 1540677736}
   - component: {fileID: 1540677735}
+  - component: {fileID: 1540677739}
   m_Layer: 7
   m_Name: platform
   m_TagString: Untagged
@@ -1018,6 +1086,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &1540677739
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1540677734}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1687093642
 GameObject:
   m_ObjectHideFlags: 0
@@ -1029,6 +1118,7 @@ GameObject:
   - component: {fileID: 1687093644}
   - component: {fileID: 1687093643}
   - component: {fileID: 1687093645}
+  - component: {fileID: 1687093646}
   m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
@@ -1129,6 +1219,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!50 &1687093646
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687093642}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1727707526
 GameObject:
   m_ObjectHideFlags: 0
@@ -1141,6 +1252,7 @@ GameObject:
   - component: {fileID: 1727707529}
   - component: {fileID: 1727707528}
   - component: {fileID: 1727707527}
+  - component: {fileID: 1727707531}
   m_Layer: 7
   m_Name: platform (3)
   m_TagString: Untagged
@@ -1260,6 +1372,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &1727707531
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727707526}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &2065684632
 GameObject:
   m_ObjectHideFlags: 0
@@ -1399,6 +1532,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2c6950ac03b104bab1e113706592c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isInvincible: 0
   maxhp: 100
   maxmp: 100
   maxspeed: 7
@@ -1412,6 +1546,8 @@ MonoBehaviour:
   dashDistance: 2
   dashRecoveryDuration: 1
   maxstamina: 2
+  combo: 0
+  comboDuration: 0
   attackAnimName:
   - Attack1
   - Attack2

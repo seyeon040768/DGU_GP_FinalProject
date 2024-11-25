@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +26,14 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject == owner)
         {
             return;
+        }
+
+        Debug.Log(gameObject);
+        Debug.Log(collision.gameObject);
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Platform")
+            || collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            Destroy(gameObject);
         }
 
         if (collision.CompareTag("Enemy") || collision.CompareTag("Player"))

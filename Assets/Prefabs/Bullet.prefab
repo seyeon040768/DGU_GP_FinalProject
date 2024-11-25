@@ -98,9 +98,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bafc42178d05c247b34800e98c6fd49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: {fileID: 0}
   damage: 5
   speed: 10
-  duration: 1000
+  duration: 3
 --- !u!58 &4351167878125535541
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -215,7 +215,18 @@ public class Player : Character
     public void Dash()
     {
         --Stamina;
-        transform.position += new Vector3(dashDistance * facingWay, 0.0f, 0.0f);
+
+        RaycastHit2D hit = Physics2D.Raycast(rb.position, transform.right * facingWay, dashDistance, LayerMask.GetMask("Ground", "Platform"));
+        if (hit.collider != null)
+        {
+            Debug.Log(hit.distance);
+            float eps = hit.distance * 0.1f;
+            transform.position += new Vector3((hit.distance - eps) * facingWay, 0.0f, 0.0f);
+        }
+        else
+        {
+            transform.position += new Vector3(dashDistance * facingWay, 0.0f, 0.0f);
+        }
     }
 
     public override void Attack()
@@ -258,8 +269,13 @@ public class Player : Character
 
     private void RotateWeaponToMouse()
     {
+ 
         float theta = GetAngleToMouse(weapon.transform.position);
 
+        if(facingWay == -1)
+        {
+            theta -= 180;
+        }
         weapon.transform.rotation = Quaternion.AngleAxis(theta, Vector3.forward);
 
 

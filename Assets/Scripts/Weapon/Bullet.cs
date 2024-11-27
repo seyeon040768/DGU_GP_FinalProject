@@ -28,8 +28,6 @@ public class Bullet : MonoBehaviour
             return;
         }
 
-        Debug.Log(gameObject);
-        Debug.Log(collision.gameObject);
         if (collision.gameObject.layer == LayerMask.NameToLayer("Platform")
             || collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {

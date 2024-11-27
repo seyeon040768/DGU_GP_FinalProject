@@ -87,7 +87,7 @@ public class Player : Character
 
         if (isAttacking)
         {
-
+            Debug.Log("Attack");
         }
         else if (isGrounded && Input.GetButton("Fire1") && attackCool <= 0.0f) // 점프 중일 때는 공격 불가
         {
@@ -152,6 +152,7 @@ public class Player : Character
         if (attackCool < 0)
         {
             attackCool = 0.0f;
+            EndAttack();
         }
 
         comboCool += Time.deltaTime;
@@ -220,7 +221,7 @@ public class Player : Character
         if (hit.collider != null)
         {
             Debug.Log(hit.distance);
-            float eps = hit.distance * 0.1f;
+            float eps = hit.distance * 0.5f;
             transform.position += new Vector3((hit.distance - eps) * facingWay, 0.0f, 0.0f);
         }
         else
@@ -239,7 +240,7 @@ public class Player : Character
         weapon.GetComponent<Weapon>().Attack();
 
         float attackAnimDuration = GetAnimationClipLength(attackAnimName[attackNum]);
-        Invoke(nameof(EndAttack), attackAnimDuration);
+        // Invoke(nameof(EndAttack), attackAnimDuration);
     }
     private void EndAttack()
     {
@@ -272,12 +273,7 @@ public class Player : Character
  
         float theta = GetAngleToMouse(weapon.transform.position);
 
-        if(facingWay == -1)
-        {
-            theta -= 180;
-        }
         weapon.transform.rotation = Quaternion.AngleAxis(theta, Vector3.forward);
-
 
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 weaponToMouse = mousePos - new Vector2(weapon.transform.position.x, weapon.transform.position.y);

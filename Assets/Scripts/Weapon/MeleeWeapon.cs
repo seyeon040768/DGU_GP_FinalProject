@@ -6,8 +6,9 @@ public abstract class MeleeWeapon : Weapon
 {
     private BoxCollider2D boxCollider2D;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         boxCollider2D = GetComponent<BoxCollider2D>();
     }
 
@@ -16,9 +17,8 @@ public abstract class MeleeWeapon : Weapon
         
     }
 
-    public override void Attack()
+    public override bool Attack()
     {
-        Debug.Log("Attack");
         Collider2D[] colliders = Physics2D.OverlapBoxAll(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0);
         foreach (Collider2D collider in colliders)
         {
@@ -30,9 +30,22 @@ public abstract class MeleeWeapon : Weapon
             if (collider.CompareTag("Enemy") || collider.CompareTag("Player"))
             {
                 Character character = collider.GetComponent<Character>();
-                character.Hp -= Damage;
+
+                if (ownerCharacter.isUltim)
+                {
+                    character.Hp -= Damage * coef;
+                }
+                else
+                {
+                    character.Hp -= Damage;
+                }
+                
                 character.TakeHit();
+
+                return true;
             }
         }
+
+        return false;
     }
 }

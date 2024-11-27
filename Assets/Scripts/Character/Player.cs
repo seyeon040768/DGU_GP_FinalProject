@@ -10,6 +10,9 @@ public class Player : Character
     public float dashRecoveryDuration;
     public float dashRecoveryCool;
 
+    public float ultimDuration;
+    public float ultimCool;
+
     public int maxstamina;
     private int stamina;
 
@@ -35,6 +38,10 @@ public class Player : Character
     public float comboDuration;
     private float comboCool;
 
+    public GameObject[] weaponsObj;
+    public Weapon[] weapons;
+    public int weaponNum;
+
     public string[] attackAnimName;
 
     private Rigidbody2D rb;
@@ -57,13 +64,17 @@ public class Player : Character
 
         combo = 0;
 
+        weaponNum = 0;
+        ActivateWeapon(weaponNum);
+        attackDuration = weapons[weaponNum].attackDuration;
+
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<CapsuleCollider2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         attackAnimHash = new int[attackAnimName.Length];
-        for (int i = 0; i < attackAnimName.Length; i++)
+        for (int i = 0; i < attackAnimName.Length; ++i)
         {
             attackAnimHash[i] = Animator.StringToHash(attackAnimName[i]);
         }
@@ -72,6 +83,7 @@ public class Player : Character
 
     void Update()
     {
+        Debug.Log(combo);
         // 필수 실행 코드 /////
 
         float horizontal = Input.GetAxis("Horizontal");
@@ -81,7 +93,7 @@ public class Player : Character
         isMoving = (horizontal != 0);
         isGrounded = rayHit.collider != null && (rayHit.distance < jumpRayDistanceThres * 1.1f && rayHit.distance > jumpRayDistanceThres * 0.9f);
         isGrounded = isGrounded && rb.velocity.y < 0.1f; // 위로 올라가는 중이면 점프 불가
-        // isAttacking은 Attack()과 EndAttack()을 이용해 공격 애니메이션 속도에 따라 동적으로 변경
+        // isAttacking은 Attack()과 EndAttack()을 이용해 공격 속도에 따라 동적으로 변경
 
         ManageCoolTime(); // 쿨타임 관리
 
@@ -89,12 +101,30 @@ public class Player : Character
 
         if (isAttacking)
         {
-            Debug.Log("Attack");
+            
         }
         else if (isGrounded && Input.GetButton("Fire1") && attackCool <= 0.0f) // 점프 중일 때는 공격 불가
         {
             isMoving = false;
             this.Attack();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha1)) // 무기 교체
+        {
+            weaponNum = 0;
+            ActivateWeapon(weaponNum);
+            attackDuration = weapons[weaponNum].attackDuration;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            weaponNum = 1;
+            ActivateWeapon(weaponNum);
+            attackDuration = weapons[weaponNum].attackDuration;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            weaponNum = 2;
+            ActivateWeapon(weaponNum);
+            attackDuration = weapons[weaponNum].attackDuration;
         }
         else
         {
@@ -122,11 +152,11 @@ public class Player : Character
 
         // 출력 관련 함수 /////
 
-        RotateWeaponToMouse(); // 무기 마우스 방향으로 회전
         if (!isMoving && isGrounded)
         { // 정지 상태이고 땅에 있을 경우에만 마우스 방향으로 회전
             RotatePlayerToMouse();
         }
+        RotateWeaponToMouse(); // 무기 마우스 방향으로 회전
         ManageAnimation(); // 애니메이션 관리
 
         ////////////////////////
@@ -162,6 +192,13 @@ public class Player : Character
         { // 콤보를 넣은지 일정 시간이 지나면 콤보 초기화
             combo = 0;
             comboCool = 0.0f;
+        }
+
+        ultimCool -= Time.deltaTime;
+        if (ultimCool <= 0.0f)
+        {
+            ultimCool = 0.0f;
+            EndUltimate();
         }
     }
 
@@ -237,21 +274,45 @@ public class Player : Character
         isAttacking = true;
         attackCool = attackDuration;
 
-        int attackNum = Random.Range(0, attackAnimHash.Length);
-        animator.SetTrigger(attackAnimHash[attackNum]);
-        weapon.GetComponent<Weapon>().Attack();
+        // int attackNum = Random.Range(0, attackAnimHash.Length);
+        // animator.SetTrigger(attackAnimHash[attackNum]);
+        if (weapons[weaponNum].Attack())
+        {
+            AddCombo();
+        }
 
-        float attackAnimDuration = GetAnimationClipLength(attackAnimName[attackNum]);
+        // float attackAnimDuration = GetAnimationClipLength(attackAnimName[attackNum]);
         // Invoke(nameof(EndAttack), attackAnimDuration);
+    }
+
+    public void AddCombo()
+    {
+        ++combo;
+        comboCool = 0.0f;
+
+        if (combo >= 20)
+        {
+            Ultimate();
+            combo = 0;
+        }
     }
     private void EndAttack()
     {
         isAttacking = false; // 공격 상태 해제
     }
 
-    private void UltimateAttack()
+    private void Ultimate()
     {
+        isUltim = true;
+        isInvincible = true;
 
+        ultimCool = ultimDuration;
+    }
+
+    private void EndUltimate()
+    {
+        isUltim = false;
+        isInvincible = false;
     }
 
     private void RotatePlayerToMouse()
@@ -272,8 +333,14 @@ public class Player : Character
 
     private void RotateWeaponToMouse()
     {
- 
+        GameObject weapon = weaponsObj[weaponNum];
+
         float theta = GetAngleToMouse(weapon.transform.position);
+
+        if (facingWay < 0)
+        {
+            theta += 180.0f;
+        }
 
         weapon.transform.rotation = Quaternion.AngleAxis(theta, Vector3.forward);
 
@@ -285,6 +352,19 @@ public class Player : Character
     public override void TakeHit()
     {
         throw new System.NotImplementedException();
+    }
+
+    private void ActivateWeapon(int weaponNum)
+    {
+        for (int i = 0; i < weaponNum; i++)
+        {
+            weaponsObj[i].SetActive(false);
+        }
+        weaponsObj[weaponNum].SetActive(true);
+        for (int i = weaponNum + 1; i < weaponsObj.Length; i++)
+        {
+            weaponsObj[i].SetActive(false);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

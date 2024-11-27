@@ -40,6 +40,12 @@ public class Bullet : MonoBehaviour
             character.Hp -= damage;
             character.TakeHit();
 
+            Player player = owner.GetComponent<Player>();
+            if (player != null)
+            {
+                player.AddCombo();
+            }
+
             Destroy(gameObject);
         }
     }

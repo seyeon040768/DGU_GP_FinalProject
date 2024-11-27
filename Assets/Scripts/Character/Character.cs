@@ -90,8 +90,8 @@ public abstract class Character : MonoBehaviour
 
     public bool isMoving;
     public bool isAttacking;
+    public bool isUltim;
 
-    public GameObject weapon;
     public float attackDuration;
     public float attackCool;
 
@@ -105,6 +105,8 @@ public abstract class Character : MonoBehaviour
         JumpForce = maxJumpForce;
         attackCool = 0.0f;
         isAttacking = false;
+
+        isUltim = false;
     }
 
     public abstract void Jump();

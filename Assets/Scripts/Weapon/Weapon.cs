@@ -6,6 +6,7 @@ using UnityEngine;
 public abstract class Weapon : MonoBehaviour
 {
     public GameObject owner; // 무기 소유자
+    protected Character ownerCharacter;
 
     [SerializeField] private float damage;
     private float maxDamage;
@@ -26,5 +27,13 @@ public abstract class Weapon : MonoBehaviour
         }
     }
 
-    public abstract void Attack();
+    public float attackDuration;
+    public float coef;
+
+    protected virtual void Start()
+    {
+        ownerCharacter = owner.GetComponent<Character>();
+    }
+
+    public abstract bool Attack();
 }

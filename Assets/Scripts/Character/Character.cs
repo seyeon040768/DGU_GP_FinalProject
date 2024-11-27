@@ -103,7 +103,6 @@ public abstract class Character : MonoBehaviour
         Mp = maxmp;
         Speed = maxspeed;
         JumpForce = maxJumpForce;
-
         attackCool = 0.0f;
         isAttacking = false;
     }

@@ -8,10 +8,12 @@ public class Player : Character
 
     public float dashDistance;
     public float dashRecoveryDuration;
-    private float dashRecoveryCool;
+    public float dashRecoveryCool;
 
     public int maxstamina;
     private int stamina;
+
+
     public int Stamina
     {
         get { return stamina; }

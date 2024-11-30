@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : Character
 {
+    [SerializeField] private SFXPool sfxPool;
     private int facingWay; // 왼쪽(-) 오른쪽(+)
 
     public float dashDistance;
@@ -37,6 +38,10 @@ public class Player : Character
     public int combo;
     public float comboDuration;
     private float comboCool;
+
+    private float walkSoundCooldown = 0.3f; // 걷기 효과음 재생 간격
+    private float lastWalkSoundTime = 0f;
+
 
     public GameObject[] weaponsObj;
     public Weapon[] weapons;
@@ -97,7 +102,9 @@ public class Player : Character
 
         ManageCoolTime(); // 쿨타임 관리
 
+
         //////////////////////
+
 
         if (isAttacking)
         {
@@ -131,17 +138,32 @@ public class Player : Character
             if (stamina > 0 && Input.GetMouseButtonDown(1))
             {
                 this.Dash();
+                sfxPool.Play("Dash");
             }
 
             if (isMoving)
             {
+                if (Time.time - lastWalkSoundTime >= walkSoundCooldown)
+                {
+                    lastWalkSoundTime = Time.time;
+                    sfxPool.Play("Walk");
+                }
                 this.Move(horizontal);
+
+            }
+            else
+            {
+                if(isMoving == false)
+                {
+                    sfxPool.Stop("Walk");
+                }
             }
 
             if ((Input.GetButtonDown("Jump") || (Input.GetButtonDown("Vertical") && vertical > 0))
                 && isGrounded) // 점프
             {
                 this.Jump();
+                sfxPool.Play("Jump");
             }
 
             if ((Input.GetButtonDown("Vertical") && vertical < 0) && currentPlatform != null) // 아래로 내려가기
@@ -305,7 +327,18 @@ public class Player : Character
     {
         isUltim = true;
         isInvincible = true;
-
+        if(weaponNum == 0) // 양손검
+        {
+            sfxPool.Play("SwordUlti");
+        }
+        if (weaponNum == 1) // 총
+        {
+            sfxPool.Play("GunUlti");
+        }
+        if (weaponNum == 2) // 쌍검
+        {
+            sfxPool.Play("TwoSwordUlti");
+        }
         ultimCool = ultimDuration;
     }
 
@@ -351,11 +384,12 @@ public class Player : Character
 
     public override void TakeHit()
     {
-        throw new System.NotImplementedException();
+        sfxPool.Play("PlayerHit");
     }
 
     private void ActivateWeapon(int weaponNum)
     {
+        sfxPool.Play("GunReload");
         for (int i = 0; i < weaponNum; i++)
         {
             weaponsObj[i].SetActive(false);

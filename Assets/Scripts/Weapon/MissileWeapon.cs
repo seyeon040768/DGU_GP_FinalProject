@@ -5,7 +5,7 @@ using UnityEngine;
 public class MissileWeapon : Weapon
 {
     public GameObject bullet;
-
+    [SerializeField] private SFXPool sfxPool;
     private void Update()
     {
         Debug.DrawRay(transform.position, Vector3.right, new Color(0, 1, 0));
@@ -19,6 +19,7 @@ public class MissileWeapon : Weapon
             theta -= 180.0f;
         }
         GameObject bulletObject = Instantiate(bullet, transform.position, Quaternion.Euler(0, 0, theta));
+        sfxPool.Play("Gun");
         Bullet bulletScript = bulletObject.GetComponent<Bullet>();
         if (bulletScript != null)
         {

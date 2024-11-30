@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TwoHandSword : MeleeWeapon
 {
+    [SerializeField] private SFXPool sfxPool;
     public int weaponNum;
     protected override void Start()
     {
@@ -15,7 +16,7 @@ public class TwoHandSword : MeleeWeapon
     public override bool Attack()
     {
         weaponNum = (weaponNum + 1) % 2;
-
+        sfxPool.Play("TwoSword");
         return base.Attack();
     }
 }

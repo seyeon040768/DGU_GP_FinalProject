@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Sword : MeleeWeapon
 {
+    [SerializeField] private SFXPool sfxPool;
+
 
     protected override void Start()
     {
@@ -12,6 +14,7 @@ public class Sword : MeleeWeapon
 
     public override bool Attack()
     {
+        sfxPool.Play("Sword");
         return base.Attack();
     }
 

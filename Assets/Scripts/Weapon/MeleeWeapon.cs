@@ -6,7 +6,7 @@ public abstract class MeleeWeapon : Weapon
 {
     private BoxCollider2D boxCollider2D;
 
-    protected override void Start()
+    protected override void Start() 
     {
         base.Start();
         boxCollider2D = GetComponent<BoxCollider2D>();

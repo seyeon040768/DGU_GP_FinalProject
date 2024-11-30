@@ -10,6 +10,9 @@ public abstract class Weapon : MonoBehaviour
 
     [SerializeField] private float damage;
     private float maxDamage;
+
+
+
     public float Damage
     {
         get { return damage; }
@@ -30,10 +33,20 @@ public abstract class Weapon : MonoBehaviour
     public float attackDuration;
     public float coef;
 
+
     protected virtual void Start()
     {
         ownerCharacter = owner.GetComponent<Character>();
     }
 
     public abstract bool Attack();
+    protected virtual void isPlayerDead()
+    {
+        if (ownerCharacter.Hp == 0)
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+
 }

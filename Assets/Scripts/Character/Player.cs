@@ -88,7 +88,6 @@ public class Player : Character
 
     void Update()
     {
-        Debug.Log(combo);
         // 필수 실행 코드 /////
 
         float horizontal = Input.GetAxis("Horizontal");
@@ -98,6 +97,7 @@ public class Player : Character
         isMoving = (horizontal != 0);
         isGrounded = rayHit.collider != null && (rayHit.distance < jumpRayDistanceThres * 1.1f && rayHit.distance > jumpRayDistanceThres * 0.9f);
         isGrounded = isGrounded && rb.velocity.y < 0.1f; // 위로 올라가는 중이면 점프 불가
+
         // isAttacking은 Attack()과 EndAttack()을 이용해 공격 속도에 따라 동적으로 변경
 
         ManageCoolTime(); // 쿨타임 관리

@@ -1,18 +1,16 @@
 using UnityEngine;
 
-public class EnemyAI : MonoBehaviour
+public class EnemyAI : Character
 {
-    public float moveSpeed = 2f; // 적의 이동 속도
-    public float chaseSpeed = 4f; // 플레이어를 추적할 속도
     public float detectionRadius = 5f; // 플레이어 탐지 반경
     public float attackRange = 1f; // 공격 사거리
     public float patrolDistance = 3f; // 순찰 거리
     public Transform player; // 플레이어 Transform
     public Animator animator; // 애니메이터
-    public LayerMask groundLayer; // 타일맵이 있는 레이어 설정
-    public float groundCheckDistance = 0.1f; // 발 아래를 체크할 거리
-    public Transform groundCheck; // 적 발 아래 위치를 확인하는 Transform
-    public float health = 3; // 적 체력
+    public float damage = 1; // 공격력
+    public float AttackDelay = 1f; // 공격 딜레이
+    private Collider2D col;
+
 
     private Vector2 startPosition; // 초기 위치
     private Vector2 patrolTarget; // 순찰시 목표 지점
@@ -20,19 +18,33 @@ public class EnemyAI : MonoBehaviour
     private bool isChasing = false; // 추적 상태
     private bool isVisible = true; // 카메라 안에 있는지 여부
     private SpriteRenderer spriteRenderer; // 스프라이트 렌더러
+    private ScreenShake screenShake; // ScreenShake 컴포넌트
+    private Vector2 previousPosition; // 이전 위치
     private bool isDead = false; // 사망 여부
+    private float jumpRayDistanceThres; // 바닥에 도착했음을 인정할 오브젝트 중심에서 바닥으로 향하는 ray의 최대 거리
 
-    void Start()
+    public Cinemachine.CinemachineVirtualCamera virtualCamera;
+
+    protected override void Start()
     {
+        base.Start();
+        col = GetComponent<Collider2D>();
+        jumpRayDistanceThres = col.bounds.extents.y;
+        RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector2.down, 2.0f, LayerMask.GetMask("Ground", "Platform"));
+        isGrounded = rayHit.collider != null && (rayHit.distance < jumpRayDistanceThres * 1.1f && rayHit.distance > jumpRayDistanceThres * 0.9f);
+
         startPosition = transform.position; // 초기 위치 저장
         patrolTarget = startPosition + Vector2.right * patrolDistance; // 순찰 목표 설정
         spriteRenderer = GetComponent<SpriteRenderer>(); // SpriteRenderer 컴포넌트 가져오기
+        previousPosition = transform.position; // 이전 위치 초기화
+        screenShake = virtualCamera.GetComponent<ScreenShake>();
     }
+
 
     void Update()
     {
         if (isDead) return; // 사망 상태에서는 아무 것도 하지 않음
-        if (health <= 0)
+        if (Hp <= 0)
         {
             Die();
         }
@@ -48,38 +60,40 @@ public class EnemyAI : MonoBehaviour
 
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-        if (distanceToPlayer <= detectionRadius)
+        if (isGrounded)
         {
-            isChasing = true;
-
-            if (distanceToPlayer > attackRange)
+            if (distanceToPlayer <= detectionRadius)
             {
-                ChasePlayer();
+                isChasing = true;
+
+                if (distanceToPlayer > attackRange)
+                {
+                    ChasePlayer();
+                }
+                else
+                {
+                    if (Time.time >= AttackDelay)
+                    {
+                        AttackPlayer();
+                        AttackDelay = Time.time + 1f;
+                    }
+                }
             }
             else
             {
-                AttackPlayer();
+                isChasing = false;
+                Patrol();
             }
-        }
-        else
-        {
-            isChasing = false;
-            Patrol();
-        }
 
-        FlipSprite();
+            FlipSprite();
+            previousPosition = transform.position;
+        }
     }
 
     void ChasePlayer()
     {
-        if (IsGrounded())
-        {
-            Vector2 targetPosition = new Vector2(player.position.x, transform.position.y);
-            Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
-
-            // 이동
-            transform.position += (Vector3)direction * chaseSpeed * Time.deltaTime;
-        }
+        Vector2 direction = (player.position - transform.position).normalized;
+        transform.position += (Vector3)direction * Speed * Time.deltaTime;
     }
 
     void Patrol()
@@ -93,39 +107,84 @@ public class EnemyAI : MonoBehaviour
         }
 
         Vector2 direction = (patrolTarget - (Vector2)transform.position).normalized;
+        transform.position += (Vector3)direction * Speed * Time.deltaTime;
+    }
 
-        // 발 아래에 타일이 있을 경우에만 이동
-        if (IsGrounded())
+    // ChasePlayer와 Patrol을 사용해서 Move 함수를 구현
+    
+
+    public override void Attack()
+    {
+        animator.SetTrigger("attack"); // 공격 애니메이션
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, attackRange);
+        foreach (Collider2D collider in colliders)
         {
-            transform.position += (Vector3)direction * moveSpeed * Time.deltaTime;
+            if (collider.CompareTag("Player"))
+            {
+                collider.GetComponent<Player>().TakeHit();
+                collider.GetComponent<Player>().Hp -= damage;
+            }
         }
+    }
+
+    public override void TakeHit()
+    {
+        if (isDead) return;
+
+        Hp -= damage;
+        animator.SetTrigger("hit"); // 피격 애니메이션 재생
+
+        if (Hp <= 0)
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        isDead = true;
+        animator.SetTrigger("die"); // 사망 애니메이션 재생
+        screenShake.ShakeScreen(4f, 1f); // 강도 4만큼 1초간 카메라 흔들림
+        Destroy(gameObject, 1f);
+    }
+
+    public override void Move(float horizontal)
+    {
+        if (isDead) return;
+
+        if (isChasing)
+        {
+            ChasePlayer();
+        }
+        else
+        {
+            Patrol();
+        }
+
+        FlipSprite();
+
+    }
+
+    public override void Jump()
+    {
+        // EnemyAI는 점프를 사용하지 않으므로 비워둠
     }
 
     void AttackPlayer()
     {
-        animator.SetTrigger("attack"); // 공격 애니메이션
-    }
-
-    void TakeDamage(int damage)
-    {
-        if (isDead) return;
-
-        health -= damage;
-        animator.SetTrigger("hit"); // 피격 애니메이션 재생
-    }
-
-    void Die()
-    {
-        isDead = true;
-        animator.SetTrigger("die"); // 사망 애니메이션 재생
-        Destroy(gameObject, 1f);
+        Attack();
     }
 
     void FlipSprite()
     {
-        if (isChasing || !isDead)
+        float movementX = transform.position.x - previousPosition.x;
+        if (movementX > 0 && spriteRenderer.flipX)
         {
-            spriteRenderer.flipX = movingRight ? false : true;
+            spriteRenderer.flipX = false;
+        }
+        else if (movementX < 0 && !spriteRenderer.flipX)
+        {
+            spriteRenderer.flipX = true;
         }
     }
 
@@ -137,11 +196,5 @@ public class EnemyAI : MonoBehaviour
     void OnBecameInvisible()
     {
         isVisible = false;
-    }
-
-    bool IsGrounded()
-    {
-        // 발 아래에 타일맵(groundLayer)가 있는지 Raycast로 확인
-        return Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
     }
 }

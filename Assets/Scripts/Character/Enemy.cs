@@ -35,4 +35,5 @@ public class Enemy : Character
         Debug.Log("Hit");
         animator.SetTrigger("TakeHit");
     }
+
 }

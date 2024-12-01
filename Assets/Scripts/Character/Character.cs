@@ -8,6 +8,10 @@ public abstract class Character : MonoBehaviour
 
     public float maxhp;
     private float hp;
+    protected Coroutine blink;
+    protected WaitForSeconds delay = new WaitForSeconds(0.1f);
+    protected SpriteRenderer sprite;
+
     public float Hp
     {
         get { return hp; }
@@ -113,4 +117,21 @@ public abstract class Character : MonoBehaviour
     public abstract void Move(float horizontal);
     public abstract void Attack();
     public abstract void TakeHit();
+
+    protected IEnumerator BlinkSprite()
+    {
+        int cnt = 0;
+        while(cnt < 10)
+        {
+            if(cnt++ % 2 == 0)
+            {
+                sprite.color = new Color(1.0f, 1.0f, 1.0f, 0.3f);
+            }
+            else
+            {
+                sprite.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+            }
+            yield return delay;
+        }
+    }
 }

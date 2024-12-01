@@ -17,7 +17,7 @@ public class Player : Character
     public int maxstamina;
     private int stamina;
 
-
+    public HUD hud;
     public int Stamina
     {
         get { return stamina; }
@@ -384,12 +384,15 @@ public class Player : Character
 
     public override void TakeHit()
     {
+        // collider를 사용해 공격을 받았음이 판단되었을때 호출되는 코드, 충돌한 공격 범위에 각각 할당된 데미지를 받아와 Hp를 감소시켜야 함
         sfxPool.Play("PlayerHit");
+        StartCoroutine(BlinkSprite());
     }
 
     private void ActivateWeapon(int weaponNum)
     {
         sfxPool.Play("GunReload");
+        hud.OnWeaponChanged(weaponNum);
         for (int i = 0; i < weaponNum; i++)
         {
             weaponsObj[i].SetActive(false);

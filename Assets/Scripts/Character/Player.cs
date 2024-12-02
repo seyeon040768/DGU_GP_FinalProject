@@ -386,7 +386,6 @@ public class Player : Character
     {
         // collider를 사용해 공격을 받았음이 판단되었을때 호출되는 코드, 충돌한 공격 범위에 각각 할당된 데미지를 받아와 Hp를 감소시켜야 함
         sfxPool.Play("PlayerHit");
-        StartCoroutine(BlinkSprite());
     }
 
     private void ActivateWeapon(int weaponNum)

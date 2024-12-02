@@ -246,6 +246,7 @@ MonoBehaviour:
   - {fileID: 1623957708}
   - {fileID: 909573235}
   - {fileID: 1265790575}
+  ultiSetting: {fileID: 0}
 --- !u!1 &64336782
 GameObject:
   m_ObjectHideFlags: 0
@@ -4716,7 +4717,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!70 &1569741324
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -4746,7 +4747,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isInvincible: 0
-  maxhp: 10
+  maxhp: 300
   maxmp: 2
   maxspeed: 3
   maxJumpForce: 1
@@ -4762,7 +4763,7 @@ MonoBehaviour:
   player: {fileID: 1467785395}
   animator: {fileID: 1569741320}
   damage: 1
-  attackDelay: 1
+  AttackDelay: 1
   virtualCamera: {fileID: 513471840}
 --- !u!1 &1605586709
 GameObject:
@@ -5243,6 +5244,10 @@ MonoBehaviour:
   coef: 3
   bullet: {fileID: 3034179842873695770, guid: bd90f446d7be26c428ad714c2ae41303, type: 3}
   sfxPool: {fileID: 1687630316}
+  cartridge: 0
+  cartridgeMax: 20
+  cartridgeCool: 0.3
+  cartridgeDuration: 0
 --- !u!4 &1664094137
 Transform:
   m_ObjectHideFlags: 0

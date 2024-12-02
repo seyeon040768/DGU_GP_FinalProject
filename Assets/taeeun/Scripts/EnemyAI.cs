@@ -10,6 +10,7 @@ public class EnemyAI : Character
     public float damage = 1; // 공격력
     public float AttackDelay = 1f; // 공격 딜레이
     private Collider2D col;
+    private Rigidbody2D rigid;
 
 
     private Vector2 startPosition; // 초기 위치
@@ -29,10 +30,7 @@ public class EnemyAI : Character
     {
         base.Start();
         col = GetComponent<Collider2D>();
-        jumpRayDistanceThres = col.bounds.extents.y;
-        RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector2.down, 2.0f, LayerMask.GetMask("Ground", "Platform"));
-        isGrounded = rayHit.collider != null && (rayHit.distance < jumpRayDistanceThres * 1.1f && rayHit.distance > jumpRayDistanceThres * 0.9f);
-
+        rigid = GetComponent<Rigidbody2D>();
         startPosition = transform.position; // 초기 위치 저장
         patrolTarget = startPosition + Vector2.right * patrolDistance; // 순찰 목표 설정
         spriteRenderer = GetComponent<SpriteRenderer>(); // SpriteRenderer 컴포넌트 가져오기
@@ -41,7 +39,7 @@ public class EnemyAI : Character
     }
 
 
-    void Update()
+    void FixedUpdate()
     {
         if (isDead) return; // 사망 상태에서는 아무 것도 하지 않음
         if (Hp <= 0)
@@ -92,12 +90,22 @@ public class EnemyAI : Character
 
     void ChasePlayer()
     {
+        // 플레이어를 향해 자연스러운 방향으로 이동
         Vector2 direction = (player.position - transform.position).normalized;
-        transform.position += (Vector3)direction * Speed * Time.deltaTime;
+
+        // 목표 위치 계산
+        Vector2 targetPosition = transform.position + (Vector3)direction * Speed * Time.deltaTime;
+
+        // 현재 위치 갱신
+        rigid.MovePosition(targetPosition);
+
+        // 추격 애니메이션 설정
+        animator.SetBool("isChasing", true);
     }
 
     void Patrol()
     {
+        // 순찰 목표에 가까워지면 방향 변경
         if (Vector2.Distance(transform.position, patrolTarget) < 0.1f)
         {
             movingRight = !movingRight;
@@ -106,12 +114,20 @@ public class EnemyAI : Character
                 : startPosition + Vector2.left * patrolDistance;
         }
 
+        // 목표 지점을 향한 방향 계산
         Vector2 direction = (patrolTarget - (Vector2)transform.position).normalized;
-        transform.position += (Vector3)direction * Speed * Time.deltaTime;
+
+        // 목표 위치로 이동
+        Vector2 targetPosition = transform.position + (Vector3)direction * Speed * Time.deltaTime;
+        rigid.MovePosition(targetPosition);
+
+        // 순찰 애니메이션 설정
+        animator.SetBool("isChasing", false);
     }
 
+
     // ChasePlayer와 Patrol을 사용해서 Move 함수를 구현
-    
+
 
     public override void Attack()
     {

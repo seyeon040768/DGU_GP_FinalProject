@@ -1,10 +1,10 @@
 using UnityEngine;
-
 public class HUD : MonoBehaviour
 {
     public HPbar hpbar; // HPbar 스크립트 참조
     public DashBar dashBar; // DashBar 스크립트 참조
     public SkillCoolDown[] skillCooldown; // SkillCooldown 스크립트 참조
+    public UltiSetting ultiSetting;
 
     void Start()
     {
@@ -14,6 +14,8 @@ public class HUD : MonoBehaviour
             dashBar = GetComponentInChildren<DashBar>();
         if (skillCooldown == null)
             skillCooldown = GetComponentsInChildren<SkillCoolDown>();
+        if (ultiSetting == null)
+            ultiSetting = GetComponentInChildren<UltiSetting>();
     }
 
     public void StartSkillCooldown(float duration)
@@ -25,6 +27,11 @@ public class HUD : MonoBehaviour
                 cooldown.StartCooldown(duration);
             }
         }
+    }
+    public void comboWrite()
+    {
+        ultiSetting.UpdateComboUI();
+        ultiSetting.CheckUltiReady();
     }
     public void OnWeaponChanged(int weaponNum)
     {

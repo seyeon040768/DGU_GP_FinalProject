@@ -118,20 +118,5 @@ public abstract class Character : MonoBehaviour
     public abstract void Attack();
     public abstract void TakeHit();
 
-    protected IEnumerator BlinkSprite()
-    {
-        int cnt = 0;
-        while(cnt < 10)
-        {
-            if(cnt++ % 2 == 0)
-            {
-                sprite.color = new Color(1.0f, 1.0f, 1.0f, 0.3f);
-            }
-            else
-            {
-                sprite.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-            }
-            yield return delay;
-        }
-    }
+
 }

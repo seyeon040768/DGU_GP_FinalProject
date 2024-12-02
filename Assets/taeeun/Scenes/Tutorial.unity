@@ -3007,8 +3007,10 @@ MonoBehaviour:
   dashDistance: 2
   dashRecoveryDuration: 1
   dashRecoveryCool: 0
+  dashEffect: {fileID: 0}
   ultimDuration: 10
   ultimCool: 0
+  ultimEffect: {fileID: 0}
   maxstamina: 2
   hud: {fileID: 64239467}
   combo: 0
@@ -4762,7 +4764,7 @@ MonoBehaviour:
   player: {fileID: 1467785395}
   animator: {fileID: 1569741320}
   damage: 1
-  attackDelay: 1
+  AttackDelay: 1
   virtualCamera: {fileID: 513471840}
 --- !u!1 &1605586709
 GameObject:
@@ -5110,6 +5112,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 1467785389}
+  effect: {fileID: 3528644526987372999, guid: cf263aef2792d9543902e9c2457c9251, type: 3}
+  effectOffset: 0.5
   damage: 10
   attackDuration: 1
   coef: 3
@@ -5238,11 +5242,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 1467785389}
+  effect: {fileID: 4676034514364363859, guid: 8f7920d4e2dd4ae46ba3ba747c681e12, type: 3}
+  effectOffset: 0
   damage: 10
   attackDuration: 0.1
   coef: 3
   bullet: {fileID: 3034179842873695770, guid: bd90f446d7be26c428ad714c2ae41303, type: 3}
   sfxPool: {fileID: 1687630316}
+  cartridge: 0
+  cartridgeMax: 0
+  cartridgeCool: 0
+  cartridgeDuration: 0
 --- !u!4 &1664094137
 Transform:
   m_ObjectHideFlags: 0
@@ -5630,6 +5640,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 1467785389}
+  effect: {fileID: 5396768838501543393, guid: 78d19db8726dc7c40a101b6c58c68747, type: 3}
+  effectOffset: 0.5
   damage: 5
   attackDuration: 0.3
   coef: 3

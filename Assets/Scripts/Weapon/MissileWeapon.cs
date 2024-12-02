@@ -50,6 +50,27 @@ public class MissileWeapon : Weapon
             }
 
             --cartridge;
+
+            Quaternion rotation = transform.rotation;
+            Vector3 position = transform.position;
+            int flag = 1;
+            if (owner.transform.localScale.x < 0)
+            {
+                flag = -1;
+
+                position -= transform.right * effectOffset;
+            }
+            else
+            {
+                position += transform.right * effectOffset;
+            }
+            GameObject effectObj = Instantiate(effect, position, rotation);
+            effectObj.transform.localScale = new Vector3(flag * effectObj.transform.localScale.x,
+                effectObj.transform.localScale.y,
+                effectObj.transform.localScale.z) * 0.5f;
+            Animator animator = effectObj.GetComponent<Animator>();
+            attackDuration = GetCurrentAnimationLength(animator);
+            Destroy(effectObj, attackDuration);
         }
 
         if (cartridge <= 0 && cartridgeCool <= 0.0f)

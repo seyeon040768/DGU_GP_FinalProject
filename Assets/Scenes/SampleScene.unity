@@ -811,6 +811,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 2065684632}
+  effect: {fileID: 8598729104124082638, guid: beada104a1669d54896529729259fe8a, type: 3}
   damage: 10
   attackDuration: 1
   coef: 3
@@ -1109,6 +1110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 2065684632}
+  effect: {fileID: 0}
   damage: 10
   attackDuration: 0.1
   coef: 3
@@ -3543,6 +3545,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 2065684632}
+  effect: {fileID: 0}
   damage: 5
   attackDuration: 0.3
   coef: 3
@@ -4388,8 +4391,10 @@ MonoBehaviour:
   dashDistance: 2
   dashRecoveryDuration: 1
   dashRecoveryCool: 0
+  dashEffect: {fileID: 0}
   ultimDuration: 10
   ultimCool: 0
+  ultimEffect: {fileID: 0}
   maxstamina: 2
   hud: {fileID: 681506709}
   combo: 0

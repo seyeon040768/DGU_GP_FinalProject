@@ -10,9 +10,11 @@ public class Player : Character
     public float dashDistance;
     public float dashRecoveryDuration;
     public float dashRecoveryCool;
+    public GameObject dashEffect;
 
     public float ultimDuration;
     public float ultimCool;
+    public GameObject ultimEffect;
 
     public int maxstamina;
     private int stamina;
@@ -76,7 +78,6 @@ public class Player : Character
 
         weaponNum = 0;
         ActivateWeapon(weaponNum);
-        attackDuration = weapons[weaponNum].attackDuration;
 
         
 
@@ -107,6 +108,11 @@ public class Player : Character
 
         //////////////////////
 
+        if (Input.GetKeyDown(KeyCode.R) && combo >= 20)
+        {
+            combo = 0;
+            Ultimate();
+        }
 
         if (isAttacking)
         {
@@ -212,7 +218,11 @@ public class Player : Character
         }
 
         comboCool += Time.deltaTime;
-        if (comboCool > comboDuration)
+        if (combo >= 20)
+        {
+
+        }
+        else if (comboCool > comboDuration)
         { // 콤보를 넣은지 일정 시간이 지나면 콤보 초기화
             combo = 0;
             comboCool = 0.0f;
@@ -296,14 +306,14 @@ public class Player : Character
     public override void Attack()
     {
         isAttacking = true;
-        attackCool = attackDuration;
 
-        // int attackNum = Random.Range(0, attackAnimHash.Length);
-        // animator.SetTrigger(attackAnimHash[attackNum]);
         if (weapons[weaponNum].Attack())
         {
             AddCombo();
         }
+
+
+        attackCool = weapons[weaponNum].attackDuration;
 
         // float attackAnimDuration = GetAnimationClipLength(attackAnimName[attackNum]);
         // Invoke(nameof(EndAttack), attackAnimDuration);
@@ -314,10 +324,9 @@ public class Player : Character
         ++combo;
         comboCool = 0.0f;
 
-        if (combo >= 20)
+        if (combo > 20)
         {
-            Ultimate();
-            combo = 0;
+            combo = 20;
         }
     }
     private void EndAttack()

@@ -6,6 +6,8 @@ using UnityEngine;
 public abstract class Weapon : MonoBehaviour
 {
     public GameObject owner; // 무기 소유자
+    public GameObject effect;
+    public float effectOffset;
     protected Character ownerCharacter;
 
     [SerializeField] private float damage;
@@ -48,5 +50,16 @@ public abstract class Weapon : MonoBehaviour
         }
     }
 
+    protected float GetCurrentAnimationLength(Animator animator)
+    {
+        if (animator.runtimeAnimatorController == null)
+        {
+            Debug.LogError("Animator Controller가 없습니다!");
+            return 0f;
+        }
 
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        return stateInfo.length;
+    }
 }

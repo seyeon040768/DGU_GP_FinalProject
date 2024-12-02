@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class EnemyAI : Character
 {
+    [SerializeField] private SFXPool sfxPool;
     public float detectionRadius = 5f; // 플레이어 탐지 반경
     public float attackRange = 1f; // 공격 사거리
     public float patrolDistance = 3f; // 순찰 거리
     public Transform player; // 플레이어 Transform
     public Animator animator; // 애니메이터
     public float damage = 1; // 공격력
-    public float AttackDelay = 1f; // 공격 딜레이
+    public float AttackDelay = 3f; // 공격 딜레이
     private Collider2D col;
     private Rigidbody2D rigid;
-
 
     private Vector2 startPosition; // 초기 위치
     private Vector2 patrolTarget; // 순찰시 목표 지점
@@ -22,7 +22,6 @@ public class EnemyAI : Character
     private ScreenShake screenShake; // ScreenShake 컴포넌트
     private Vector2 previousPosition; // 이전 위치
     private bool isDead = false; // 사망 여부
-    private float jumpRayDistanceThres; // 바닥에 도착했음을 인정할 오브젝트 중심에서 바닥으로 향하는 ray의 최대 거리
 
     public Cinemachine.CinemachineVirtualCamera virtualCamera;
 
@@ -38,7 +37,6 @@ public class EnemyAI : Character
         screenShake = virtualCamera.GetComponent<ScreenShake>();
     }
 
-
     void FixedUpdate()
     {
         if (isDead) return; // 사망 상태에서는 아무 것도 하지 않음
@@ -46,6 +44,8 @@ public class EnemyAI : Character
         {
             Die();
         }
+
+        // 시야 범위에서 벗어나면 애니메이션 비활성화
         if (!isVisible)
         {
             animator.enabled = false;
@@ -56,9 +56,11 @@ public class EnemyAI : Character
             animator.enabled = true;
         }
 
+        // 플레이어와의 거리 계산
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-        if (isGrounded)
+        // 플랫폼 위에 있는지 확인
+        if (IsOnPlatform())
         {
             if (distanceToPlayer <= detectionRadius)
             {
@@ -72,7 +74,7 @@ public class EnemyAI : Character
                 {
                     if (Time.time >= AttackDelay)
                     {
-                        AttackPlayer();
+                        Attack();
                         AttackDelay = Time.time + 1f;
                     }
                 }
@@ -86,26 +88,34 @@ public class EnemyAI : Character
             FlipSprite();
             previousPosition = transform.position;
         }
+        else
+        {
+            // 플랫폼에 없을 경우 정지
+            rigid.velocity = Vector2.zero;
+            animator.SetFloat("Speed", 0); // 이동 애니메이션 정지
+        }
+    }
+
+    // 플랫폼 위에 있는지 확인하는 메서드
+    bool IsOnPlatform()
+    {
+        Vector2 frontVec = new Vector2(transform.position.x, transform.position.y);
+        Debug.DrawRay(frontVec, Vector3.down, new Color(0, 1, 0)); // 디버그 용도
+        RaycastHit2D rayHit = Physics2D.Raycast(frontVec, Vector3.down, 1f, LayerMask.GetMask("Platform", "Ground"));
+
+        return rayHit.collider != null;
     }
 
     void ChasePlayer()
     {
-        // 플레이어를 향해 자연스러운 방향으로 이동
+
         Vector2 direction = (player.position - transform.position).normalized;
-
-        // 목표 위치 계산
         Vector2 targetPosition = transform.position + (Vector3)direction * Speed * Time.deltaTime;
-
-        // 현재 위치 갱신
         rigid.MovePosition(targetPosition);
-
-        // 추격 애니메이션 설정
-        animator.SetBool("isChasing", true);
     }
 
     void Patrol()
     {
-        // 순찰 목표에 가까워지면 방향 변경
         if (Vector2.Distance(transform.position, patrolTarget) < 0.1f)
         {
             movingRight = !movingRight;
@@ -114,24 +124,16 @@ public class EnemyAI : Character
                 : startPosition + Vector2.left * patrolDistance;
         }
 
-        // 목표 지점을 향한 방향 계산
         Vector2 direction = (patrolTarget - (Vector2)transform.position).normalized;
-
-        // 목표 위치로 이동
         Vector2 targetPosition = transform.position + (Vector3)direction * Speed * Time.deltaTime;
         rigid.MovePosition(targetPosition);
 
-        // 순찰 애니메이션 설정
-        animator.SetBool("isChasing", false);
     }
-
-
-    // ChasePlayer와 Patrol을 사용해서 Move 함수를 구현
-
 
     public override void Attack()
     {
-        animator.SetTrigger("attack"); // 공격 애니메이션
+        sfxPool.Play("EnemyAttack");
+        animator.SetTrigger("attack");
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, attackRange);
         foreach (Collider2D collider in colliders)
         {
@@ -148,7 +150,7 @@ public class EnemyAI : Character
         if (isDead) return;
 
         Hp -= damage;
-        animator.SetTrigger("hit"); // 피격 애니메이션 재생
+        animator.SetTrigger("hit");
 
         if (Hp <= 0)
         {
@@ -159,8 +161,9 @@ public class EnemyAI : Character
     public void Die()
     {
         isDead = true;
-        animator.SetTrigger("die"); // 사망 애니메이션 재생
-        screenShake.ShakeScreen(4f, 1f); // 강도 4만큼 1초간 카메라 흔들림
+        animator.SetTrigger("die");
+        sfxPool.Play("EnemyDie");
+        screenShake.ShakeScreen(4f, 1f);
         Destroy(gameObject, 1f);
     }
 
@@ -178,7 +181,6 @@ public class EnemyAI : Character
         }
 
         FlipSprite();
-
     }
 
     public override void Jump()
@@ -186,10 +188,6 @@ public class EnemyAI : Character
         // EnemyAI는 점프를 사용하지 않으므로 비워둠
     }
 
-    void AttackPlayer()
-    {
-        Attack();
-    }
 
     void FlipSprite()
     {

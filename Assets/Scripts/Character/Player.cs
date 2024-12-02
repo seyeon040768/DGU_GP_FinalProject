@@ -63,6 +63,11 @@ public class Player : Character
     protected override void Start()
     {
         base.Start();
+        rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<CapsuleCollider2D>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
         Stamina = maxstamina;
 
         facingWay = (int)(transform.localScale.x / Mathf.Abs(transform.localScale.x));
@@ -73,10 +78,7 @@ public class Player : Character
         ActivateWeapon(weaponNum);
         attackDuration = weapons[weaponNum].attackDuration;
 
-        rb = GetComponent<Rigidbody2D>();
-        col = GetComponent<CapsuleCollider2D>();
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        
 
         attackAnimHash = new int[attackAnimName.Length];
         for (int i = 0; i < attackAnimName.Length; ++i)

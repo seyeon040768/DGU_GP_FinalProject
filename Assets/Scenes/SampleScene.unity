@@ -812,6 +812,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 2065684632}
   effect: {fileID: 8598729104124082638, guid: beada104a1669d54896529729259fe8a, type: 3}
+  effectOffset: 0
   damage: 10
   attackDuration: 1
   coef: 3
@@ -1111,6 +1112,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 2065684632}
   effect: {fileID: 0}
+  effectOffset: 0
   damage: 10
   attackDuration: 0.1
   coef: 3
@@ -1173,6 +1175,7 @@ MonoBehaviour:
   - {fileID: 611290379}
   - {fileID: 604888352}
   - {fileID: 716809840}
+  ultiSetting: {fileID: 0}
 --- !u!114 &681506710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3546,6 +3549,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 2065684632}
   effect: {fileID: 0}
+  effectOffset: 0
   damage: 5
   attackDuration: 0.3
   coef: 3
@@ -4391,7 +4395,7 @@ MonoBehaviour:
   dashDistance: 2
   dashRecoveryDuration: 1
   dashRecoveryCool: 0
-  dashEffect: {fileID: 0}
+  dashEffect: {fileID: 1955679944435630335, guid: 77a164a5128787c47adb2488f08425e5, type: 3}
   ultimDuration: 10
   ultimCool: 0
   ultimEffect: {fileID: 0}

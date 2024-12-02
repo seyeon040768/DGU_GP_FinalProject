@@ -291,16 +291,25 @@ public class Player : Character
         --Stamina;
 
         RaycastHit2D hit = Physics2D.Raycast(rb.position, transform.right * facingWay, dashDistance, LayerMask.GetMask("Ground", "Platform"));
+        float distance = dashDistance * facingWay;
         if (hit.collider != null)
         {
             Debug.Log(hit.distance);
             float eps = hit.distance * 0.5f;
-            transform.position += new Vector3((hit.distance - eps) * facingWay, 0.0f, 0.0f);
+            distance = (hit.distance - eps) * facingWay;
         }
-        else
+
+        Vector3 scale = dashEffect.transform.localScale * 0.6f * (float)(facingWay);
+        if (Mathf.Abs(scale.x) > Mathf.Abs(distance))
         {
-            transform.position += new Vector3(dashDistance * facingWay, 0.0f, 0.0f);
+            scale *= Mathf.Abs(distance) / Mathf.Abs(scale.x);
         }
+
+        Vector3 position = new Vector3(transform.position.x + scale.x * 0.7f, transform.position.y, transform.position.z); ;
+        GameObject dashEffectObj = Instantiate(dashEffect, position, Quaternion.identity);
+        dashEffectObj.transform.localScale = scale;
+        Destroy(dashEffectObj, GetCurrentAnimationLength(dashEffectObj.GetComponent<Animator>()));
+        transform.position += new Vector3(distance, 0.0f, 0.0f);
     }
 
     public override void Attack()
@@ -469,6 +478,19 @@ public class Player : Character
             }
         }
         return 0f;
+    }
+
+    private float GetCurrentAnimationLength(Animator animator)
+    {
+        if (animator.runtimeAnimatorController == null)
+        {
+            Debug.LogError("Animator Controller가 없습니다!");
+            return 0f;
+        }
+
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        return stateInfo.length;
     }
 
     float GetAngleToMouse(Vector3 position)

@@ -48,6 +48,8 @@ public class Player : Character
     public GameObject[] weaponsObj;
     public Weapon[] weapons;
     public int weaponNum;
+    public float weaponChangeCool;
+    public float weaponChangeDuration;
 
     public string[] attackAnimName;
 
@@ -79,7 +81,7 @@ public class Player : Character
         weaponNum = 0;
         ActivateWeapon(weaponNum);
 
-        
+        weaponChangeCool = weaponChangeDuration;
 
         attackAnimHash = new int[attackAnimName.Length];
         for (int i = 0; i < attackAnimName.Length; ++i)
@@ -116,26 +118,26 @@ public class Player : Character
 
         if (isAttacking)
         {
-            
+
         }
         else if (isGrounded && Input.GetButton("Fire1") && attackCool <= 0.0f) // 점프 중일 때는 공격 불가
         {
             isMoving = false;
             this.Attack();
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha1)) // 무기 교체
+        else if (Input.GetKeyDown(KeyCode.Alpha1) && weaponChangeCool <= 0.0f) // 무기 교체
         {
             weaponNum = 0;
             ActivateWeapon(weaponNum);
             attackDuration = weapons[weaponNum].attackDuration;
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && weaponChangeCool <= 0.0f)
         {
             weaponNum = 1;
             ActivateWeapon(weaponNum);
             attackDuration = weapons[weaponNum].attackDuration;
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        else if (Input.GetKeyDown(KeyCode.Alpha3) && weaponChangeCool <= 0.0f)
         {
             weaponNum = 2;
             ActivateWeapon(weaponNum);
@@ -208,6 +210,12 @@ public class Player : Character
         {
             dashRecoveryCool = dashRecoveryDuration;
             ++Stamina;
+        }
+
+        weaponChangeCool -= Time.deltaTime;
+        if (weaponChangeCool < 0)
+        {
+            weaponChangeCool = 0;
         }
 
         attackCool -= Time.deltaTime;
@@ -314,6 +322,7 @@ public class Player : Character
 
     public override void Attack()
     {
+        Debug.Log("Attack");
         isAttacking = true;
 
         if (weapons[weaponNum].Attack())
@@ -411,6 +420,7 @@ public class Player : Character
     private void ActivateWeapon(int weaponNum)
     {
         sfxPool.Play("GunReload");
+        weaponChangeCool = weaponChangeDuration;
         hud.OnWeaponChanged(weaponNum);
         for (int i = 0; i < weaponNum; i++)
         {

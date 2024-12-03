@@ -1111,7 +1111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 2065684632}
-  effect: {fileID: 0}
+  effect: {fileID: 4676034514364363859, guid: 8f7920d4e2dd4ae46ba3ba747c681e12, type: 3}
   effectOffset: 0
   damage: 10
   attackDuration: 0.1
@@ -3548,7 +3548,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 2065684632}
-  effect: {fileID: 0}
+  effect: {fileID: 3528644526987372999, guid: cf263aef2792d9543902e9c2457c9251, type: 3}
   effectOffset: 0
   damage: 5
   attackDuration: 0.3
@@ -4412,6 +4412,8 @@ MonoBehaviour:
   - {fileID: 677169589}
   - {fileID: 1753426120}
   weaponNum: 0
+  weaponChangeCool: 0
+  weaponChangeDuration: 3
   attackAnimName:
   - Attack1
   - Attack2

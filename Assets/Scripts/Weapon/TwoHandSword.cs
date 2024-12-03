@@ -31,6 +31,7 @@ public class TwoHandSword : MeleeWeapon
             position += transform.right * effectOffset;
         }
         GameObject effectObj = Instantiate(effect, position, rotation);
+        print(effectObj.name);
         effectObj.transform.localScale = new Vector3(flag * effectObj.transform.localScale.x,
             effectObj.transform.localScale.y,
             effectObj.transform.localScale.z);

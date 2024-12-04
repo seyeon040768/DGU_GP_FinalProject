@@ -246,6 +246,8 @@ public class Player : Character
         if (isAttacking)
         {
             animator.SetBool("isMove", false);
+            animator.SetBool("isJump", false);
+            animator.SetBool("isFall", false);
             return;
         }
 
@@ -306,7 +308,7 @@ public class Player : Character
         Vector3 scale = dashEffect.transform.localScale * 0.6f * (float)(facingWay);
         if (Mathf.Abs(scale.x) > Mathf.Abs(distance))
         {
-            scale *= Mathf.Abs(distance) / Mathf.Abs(scale.x);
+            scale.x *= Mathf.Abs(distance) / Mathf.Abs(scale.x);
         }
 
         Vector3 position = new Vector3(transform.position.x + scale.x * 0.7f, transform.position.y, transform.position.z); ;

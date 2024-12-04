@@ -545,7 +545,7 @@ MonoBehaviour:
   - {fileID: 9049311202000494523}
   weaponNum: 0
   weaponChangeCool: 0
-  weaponChangeDuration: 0
+  weaponChangeDuration: 3
   attackAnimName:
   - Attack1
   - Attack2

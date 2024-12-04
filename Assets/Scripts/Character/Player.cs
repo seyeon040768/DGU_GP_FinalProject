@@ -151,7 +151,7 @@ public class Player : Character
                 sfxPool.Play("Dash");
             }
 
-            if (isMoving && isGrounded)
+            if (isMoving)
             {
                 if (Time.time - lastWalkSoundTime >= walkSoundCooldown)
                 {
@@ -352,6 +352,11 @@ public class Player : Character
     {
         isUltim = true;
         isInvincible = true;
+
+        GameObject ultimEffectObj = Instantiate(ultimEffect, transform.position, Quaternion.identity);
+        float animLength = GetCurrentAnimationLength(ultimEffectObj.GetComponent<Animator>());
+        Destroy(ultimEffectObj, animLength);
+
         if(weaponNum == 0) // ¾ç¼Õ°Ë
         {
             sfxPool.Play("SwordUlti");

@@ -246,6 +246,8 @@ public class Player : Character
         if (isAttacking)
         {
             animator.SetBool("isMove", false);
+            animator.SetBool("isJump", false);
+            animator.SetBool("isFall", false);
             return;
         }
 

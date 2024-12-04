@@ -151,7 +151,7 @@ public class Player : Character
                 sfxPool.Play("Dash");
             }
 
-            if (isMoving)
+            if (isMoving && isGrounded)
             {
                 if (Time.time - lastWalkSoundTime >= walkSoundCooldown)
                 {
@@ -163,10 +163,7 @@ public class Player : Character
             }
             else
             {
-                if(isMoving == false)
-                {
-                    sfxPool.Stop("Walk");
-                }
+                sfxPool.Stop("Walk");
             }
 
             if ((Input.GetButtonDown("Jump") || (Input.GetButtonDown("Vertical") && vertical > 0))
@@ -302,7 +299,6 @@ public class Player : Character
         float distance = dashDistance * facingWay;
         if (hit.collider != null)
         {
-            Debug.Log(hit.distance);
             float eps = hit.distance * 0.5f;
             distance = (hit.distance - eps) * facingWay;
         }

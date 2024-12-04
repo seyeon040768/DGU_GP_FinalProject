@@ -130,18 +130,21 @@ public class Player : Character
             weaponNum = 0;
             ActivateWeapon(weaponNum);
             attackDuration = weapons[weaponNum].attackDuration;
+            attackCool = 0.0f;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2) && weaponChangeCool <= 0.0f)
         {
             weaponNum = 1;
             ActivateWeapon(weaponNum);
             attackDuration = weapons[weaponNum].attackDuration;
+            attackCool = 0.0f;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3) && weaponChangeCool <= 0.0f)
         {
             weaponNum = 2;
             ActivateWeapon(weaponNum);
             attackDuration = weapons[weaponNum].attackDuration;
+            attackCool = 0.0f;
         }
         else
         {
@@ -344,6 +347,8 @@ public class Player : Character
         {
             combo = 20;
         }
+
+        hud.ultiSetting.UpdateComboUI();
     }
     private void EndAttack()
     {

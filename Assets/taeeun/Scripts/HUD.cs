@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 public class HUD : MonoBehaviour
 {
     public HPbar hpbar; // HPbar 스크립트 참조
     public DashBar dashBar; // DashBar 스크립트 참조
     public SkillCoolDown[] skillCooldown; // SkillCooldown 스크립트 참조
     public UltiSetting ultiSetting;
+    public Text comboText;
 
     void Start()
     {

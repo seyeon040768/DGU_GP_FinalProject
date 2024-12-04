@@ -13,9 +13,15 @@ public class MissileWeapon : Weapon
     public float cartridgeCool;
     public float cartridgeDuration;
 
+    protected override void Start()
+    {
+        base.Start();
+        cartridge = cartridgeMax;
+    }
+
     private void Update()
     {
-        if (cartridgeCool > 0)
+        if (cartridge <= 0)
         {
             cartridgeCool -= Time.deltaTime;
             if (cartridgeCool < 0.0f)
@@ -73,8 +79,11 @@ public class MissileWeapon : Weapon
             Destroy(effectObj, attackDuration);
         }
 
-        if (cartridge <= 0 && cartridgeCool <= 0.0f)
+        if (cartridge <= 0)
         {
+
+            Debug.Log("reload");
+
             cartridgeCool = cartridgeDuration;
 
             sfxPool.Play("GunReload");

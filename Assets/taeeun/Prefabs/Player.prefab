@@ -188,7 +188,7 @@ MonoBehaviour:
   cartridge: 0
   cartridgeMax: 20
   cartridgeCool: 2
-  cartridgeDuration: 0
+  cartridgeDuration: 1
 --- !u!212 &9049311202185275238
 SpriteRenderer:
   m_ObjectHideFlags: 0

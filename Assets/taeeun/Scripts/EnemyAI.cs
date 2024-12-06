@@ -42,6 +42,8 @@ public class EnemyAI : Character
         if (isDead) return; // 사망 상태에서는 아무 것도 하지 않음
         if (Hp <= 0)
         {
+            FindObjectOfType<SceneManage>().OnEnemyDefeated();
+            Destroy(gameObject);
             Die();
         }
 

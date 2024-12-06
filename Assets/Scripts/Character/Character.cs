@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class Character : MonoBehaviour
 {
     public bool isInvincible;
+    public bool isDeath;
 
     public float maxhp;
     private float hp;
@@ -23,8 +24,9 @@ public abstract class Character : MonoBehaviour
             }
 
             this.hp = value;
-            if (this.hp < 0)
+            if (this.hp <= 0)
             {
+                isDeath = true;
                 this.hp = 0;
             }
             else if (this.hp > maxhp)
@@ -102,6 +104,7 @@ public abstract class Character : MonoBehaviour
     protected virtual void Start()
     {
         isInvincible = false;
+        isDeath = false;
 
         Hp = maxhp;
         Mp = maxmp;

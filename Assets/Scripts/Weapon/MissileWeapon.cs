@@ -16,6 +16,7 @@ public class MissileWeapon : Weapon
     protected override void Start()
     {
         base.Start();
+        cartridgeCool = 0.0f;
         cartridge = cartridgeMax;
     }
 
@@ -78,10 +79,9 @@ public class MissileWeapon : Weapon
             attackDuration = GetCurrentAnimationLength(animator);
             Destroy(effectObj, attackDuration);
         }
-
-        if (cartridge <= 0)
+        
+        if (cartridge <= 0 && cartridgeCool <= 0)
         {
-
             Debug.Log("reload");
 
             cartridgeCool = cartridgeDuration;

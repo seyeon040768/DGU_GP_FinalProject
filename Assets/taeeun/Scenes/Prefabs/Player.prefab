@@ -185,9 +185,9 @@ MonoBehaviour:
   coef: 3
   bullet: {fileID: 3034179842873695770, guid: bd90f446d7be26c428ad714c2ae41303, type: 3}
   sfxPool: {fileID: 0}
-  cartridge: 0
+  cartridge: 20
   cartridgeMax: 20
-  cartridgeCool: 2
+  cartridgeCool: 1
   cartridgeDuration: 1
 --- !u!212 &9049311202185275238
 SpriteRenderer:
@@ -451,7 +451,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 4723107735738678597, guid: 0bd97e23f8b532a4f8969605a3b00a4e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -513,6 +513,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isInvincible: 0
+  isDeath: 0
   maxhp: 100
   maxmp: 100
   maxspeed: 7
@@ -531,6 +532,7 @@ MonoBehaviour:
   ultimDuration: 10
   ultimCool: 0
   ultimEffect: {fileID: 3280303664790833749, guid: c84f8d692fd73cf4cbf1943e74bad424, type: 3}
+  ultimActiveEffect: {fileID: 2744335168652822857, guid: a158c7352a24fcf4a93a84e6fa986d09, type: 3}
   maxstamina: 2
   hud: {fileID: 0}
   combo: 0

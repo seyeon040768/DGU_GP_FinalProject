@@ -16,7 +16,7 @@ public class UltiSetting : MonoBehaviour
     void Awake()
     {
         if (ultiIcon == null)
-            ultiIcon = GameObject.Find("UltiIcon"); // UltiIcon 오브젝트를 찾아 설정
+            ultiIcon = GameObject.Find("ultiDisabled"); // UltiIcon 오브젝트를 찾아 설정
         if (player == null)
             player = GetComponent<Player>(); // Player 스크립트 참조
 
@@ -61,6 +61,10 @@ public class UltiSetting : MonoBehaviour
             if (player.combo >= 20)
             {
                 ultiIcon.SetActive(false); // Combo가 20 이상이면 궁극기 아이콘 활성화
+            }
+            else
+            {
+                ultiIcon.SetActive(true);
             }
         }
     }

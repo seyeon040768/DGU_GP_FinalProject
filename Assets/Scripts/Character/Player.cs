@@ -15,6 +15,7 @@ public class Player : Character
     public float ultimDuration;
     public float ultimCool;
     public GameObject ultimEffect;
+    public GameObject ultimActiveEffect;
 
     public int maxstamina;
     private int stamina;
@@ -89,10 +90,22 @@ public class Player : Character
             attackAnimHash[i] = Animator.StringToHash(attackAnimName[i]);
         }
         jumpRayDistanceThres = col.bounds.extents.y;
+
+        animator.SetBool("isMove", false);
+        animator.SetBool("isJump", false);
+        animator.SetBool("isFall", false);
+        animator.SetBool("isDeath", false);
     }
 
     void Update()
     {
+        if (isDeath)
+        {
+            ManageAnimation();
+
+            return;
+        }
+
         // ÇÊ¼ö ½ÇÇà ÄÚµå /////
 
         float horizontal = Input.GetAxis("Horizontal");
@@ -115,7 +128,7 @@ public class Player : Character
             combo = 0;
             Ultimate();
         }
-
+        
         if (isAttacking)
         {
 
@@ -131,6 +144,8 @@ public class Player : Character
             ActivateWeapon(weaponNum);
             attackDuration = weapons[weaponNum].attackDuration;
             attackCool = 0.0f;
+
+            sfxPool.Play("Sword");
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2) && weaponChangeCool <= 0.0f)
         {
@@ -138,6 +153,8 @@ public class Player : Character
             ActivateWeapon(weaponNum);
             attackDuration = weapons[weaponNum].attackDuration;
             attackCool = 0.0f;
+
+            sfxPool.Play("GunReload");
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3) && weaponChangeCool <= 0.0f)
         {
@@ -145,6 +162,8 @@ public class Player : Character
             ActivateWeapon(weaponNum);
             attackDuration = weapons[weaponNum].attackDuration;
             attackCool = 0.0f;
+
+            sfxPool.Play("TwoSword");
         }
         else
         {
@@ -198,9 +217,6 @@ public class Player : Character
         {
             manager.Action(scanObject);
         }
-
-
-        Debug.DrawRay(rb.position, Vector3.down, new Color(0, 1, 0));
     }
 
     private void ManageCoolTime()
@@ -246,6 +262,16 @@ public class Player : Character
 
     private void ManageAnimation()
     {
+        if (isDeath)
+        {
+            animator.SetBool("isMove", false);
+            animator.SetBool("isJump", false);
+            animator.SetBool("isFall", false);
+
+            animator.SetBool("isDeath", true);
+            return;
+        }
+
         if (isAttacking)
         {
             animator.SetBool("isMove", false);
@@ -323,7 +349,6 @@ public class Player : Character
 
     public override void Attack()
     {
-        Debug.Log("Attack");
         isAttacking = true;
 
         if (weapons[weaponNum].Attack())
@@ -364,15 +389,18 @@ public class Player : Character
         float animLength = GetCurrentAnimationLength(ultimEffectObj.GetComponent<Animator>());
         Destroy(ultimEffectObj, animLength);
 
+        GameObject ultimActiveEffectObj = Instantiate(ultimActiveEffect, transform);
+        Destroy(ultimActiveEffectObj, ultimDuration);
+
         if(weaponNum == 0) // ¾ç¼Õ°Ë
         {
             sfxPool.Play("SwordUlti");
         }
-        if (weaponNum == 1) // ÃÑ
+        else if (weaponNum == 1) // ÃÑ
         {
             sfxPool.Play("GunUlti");
         }
-        if (weaponNum == 2) // ½Ö°Ë
+        else if (weaponNum == 2) // ½Ö°Ë
         {
             sfxPool.Play("TwoSwordUlti");
         }
@@ -427,7 +455,6 @@ public class Player : Character
 
     private void ActivateWeapon(int weaponNum)
     {
-        sfxPool.Play("GunReload");
         weaponChangeCool = weaponChangeDuration;
         hud.OnWeaponChanged(weaponNum);
         for (int i = 0; i < weaponNum; i++)

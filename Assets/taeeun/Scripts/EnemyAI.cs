@@ -12,7 +12,6 @@ public class EnemyAI : Character
     public float AttackDelay = 3f; // 공격 딜레이
     private Collider2D col;
     private Rigidbody2D rigid;
-
     private Vector2 startPosition; // 초기 위치
     private Vector2 patrolTarget; // 순찰시 목표 지점
     private bool movingRight = true; // 이동 방향
@@ -21,7 +20,7 @@ public class EnemyAI : Character
     private SpriteRenderer spriteRenderer; // 스프라이트 렌더러
     private ScreenShake screenShake; // ScreenShake 컴포넌트
     private Vector2 previousPosition; // 이전 위치
-    private bool isDead = false; // 사망 여부
+    public bool isDead = false; // 사망 여부
 
     public Cinemachine.CinemachineVirtualCamera virtualCamera;
 
@@ -42,8 +41,6 @@ public class EnemyAI : Character
         if (isDead) return; // 사망 상태에서는 아무 것도 하지 않음
         if (Hp <= 0)
         {
-            FindObjectOfType<SceneManage>().OnEnemyDefeated();
-            Destroy(gameObject);
             Die();
         }
 
@@ -151,6 +148,7 @@ public class EnemyAI : Character
     {
         if (isDead) return;
 
+
         Hp -= damage;
         animator.SetTrigger("hit");
 
@@ -165,7 +163,9 @@ public class EnemyAI : Character
         isDead = true;
         animator.SetTrigger("die");
         sfxPool.Play("EnemyDie");
+        FindObjectOfType<SceneManage>().OnEnemyDefeated();
         screenShake.ShakeScreen(4f, 1f);
+
         Destroy(gameObject, 1f);
     }
 

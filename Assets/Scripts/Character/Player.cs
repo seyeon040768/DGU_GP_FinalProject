@@ -21,6 +21,7 @@ public class Player : Character
     private int stamina;
 
     public HUD hud;
+    public SceneManage sceneManage;
     public int Stamina
     {
         get { return stamina; }
@@ -64,6 +65,7 @@ public class Player : Character
     private int[] attackAnimHash;
     private float jumpRayDistanceThres; // 바닥에 도착했음을 인정할 오브젝트 중심에서 바닥으로 향하는 ray의 최대 거리
     GameObject scanObject;
+
 
     protected override void Start()
     {
@@ -450,7 +452,11 @@ public class Player : Character
     public override void TakeHit()
     {
         // collider를 사용해 공격을 받았음이 판단되었을때 호출되는 코드, 충돌한 공격 범위에 각각 할당된 데미지를 받아와 Hp를 감소시켜야 함
-        sfxPool.Play("PlayerHit");
+        if(Hp <= 0)
+        {
+            isDeath = true;
+            sceneManage.GameOver();
+        }
     }
 
     private void ActivateWeapon(int weaponNum)

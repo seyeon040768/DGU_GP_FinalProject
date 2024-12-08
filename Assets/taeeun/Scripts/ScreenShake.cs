@@ -11,6 +11,7 @@ public class ScreenShake : MonoBehaviour
     private void Awake()
     {
         virtualCamera = GetComponent<CinemachineVirtualCamera>();
+
     }
 
     public void ShakeScreen(float intensity = 2f, float duration = 1f)

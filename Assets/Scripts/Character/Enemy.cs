@@ -27,7 +27,7 @@ public class Enemy : Character
 
     public override void Attack()
     {
-        throw new System.NotImplementedException();
+
     }
 
     public override void TakeHit()

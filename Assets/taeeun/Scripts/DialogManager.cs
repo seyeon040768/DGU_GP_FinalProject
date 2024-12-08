@@ -5,10 +5,9 @@ using UnityEngine.UI;
 
 public class DialogManager : MonoBehaviour
 {
-    public int is_aid = 0;
-    public int is_player = 0;
-    public GameObject imageObject; 
-    public GameObject imageObject1;
+    public bool is_aid = false;
+    public bool is_player = false;
+
 
     Dictionary<int, string[]> talkData;
 
@@ -17,16 +16,6 @@ public class DialogManager : MonoBehaviour
         talkData = new Dictionary<int, string[]>();
         GenerateData();
 
-        
-        if (imageObject != null)
-        {
-            imageObject.SetActive(false);
-        }
-
-        if (imageObject1 != null)
-        {
-            imageObject1.SetActive(false);
-        }
     }
 
     void GenerateData()
@@ -65,7 +54,7 @@ public class DialogManager : MonoBehaviour
         talkData.Add(43, new string[] { " 올라가도 끝이 없다..", "-걱정마 거의 다 올라왔어", "-상단에 적 3명", " 알았다.. 후..", " 다 가만두지 않겠어" });
 
         // Boss Stage
-        talkData.Add(51, new string[] { "-여기야. 도착했어", "-다크네온 보스의 방", " 후.. 올라오느라 힘들군", " 다 가만두지 않겠어..", " 금방 처리하고 돌아가지", "-응. 제로. 믿을게" });
+        talkData.Add(51, new string[] { "-여기야. 도착했어", "-다크네온 보스의 방", " 후.. 올라오느라 힘들군", " 다 가만두지 않겠어..", " 금방 처리하고 돌아가지", " 끝이 보인다" });
     }
 
     public string GetTalk(int id, int talkIndex)
@@ -81,23 +70,13 @@ public class DialogManager : MonoBehaviour
         
         if (talk.StartsWith("-"))
         {
-            is_aid = 1;
-            is_player = 0;
-            if (imageObject != null)
-            {
-                imageObject.SetActive(true); 
-                imageObject1.SetActive(false); 
-            }
+            is_aid = true;
+
+
         }
         else if(talk.StartsWith(" "))
         {
-            is_aid = 0;
-            is_player = 1;
-            if (imageObject1 != null)
-            {
-                imageObject1.SetActive(true); 
-                imageObject.SetActive(false); 
-            }
+            is_player = true;
         }
 
         return talk;
@@ -106,17 +85,8 @@ public class DialogManager : MonoBehaviour
     public void EndTalk()
     {
         
-        is_aid = 0;
-        is_player = 0;
+        is_aid = false;
+        is_player = false;
 
-        if (imageObject != null)
-        {
-            imageObject.SetActive(false); 
-        }
-
-        if (imageObject1 != null)
-        {
-            imageObject1.SetActive(false); 
-        }
     }
 }

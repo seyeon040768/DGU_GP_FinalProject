@@ -6,12 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 1
     path: Assets/taeeun/Scenes/title.unity
     guid: 81e3433080b550948bebf4c1e741aeeb
   - enabled: 1
     path: Assets/taeeun/Scenes/Tutorial.unity
-    guid: 796083bd997d6d34bb93143db045d2a9
+    guid: 4144e6f0b9f754c43a0bcc9721f371a0
+  - enabled: 1
+    path: Assets/taeeun/Scenes/Start.unity
+    guid: 3f7c622aa00cdf844826375fac21d7d8
+  - enabled: 1
+    path: Assets/taeeun/Scenes/normal stage2.unity
+    guid: ebe66fc40a597054baced758555007fd
+  - enabled: 1
+    path: Assets/taeeun/Scenes/Boss.unity
+    guid: 67d0df54e50fee441ba17edc368a0bad
   m_configObjects: {}

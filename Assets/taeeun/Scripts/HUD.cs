@@ -8,8 +8,10 @@ public class HUD : MonoBehaviour
     public UltiSetting ultiSetting;
     public Text comboText;
 
+
     void Start()
     {
+
         if (hpbar == null)
             hpbar = GetComponentInChildren<HPbar>();
         if (dashBar == null)
